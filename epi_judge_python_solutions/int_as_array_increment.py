@@ -2,20 +2,18 @@ from test_framework import generic_test
 
 
 def plus_one(A):
+    string_A = ""
+    for i in range(len(A)):
+        string_A += str(A[i])
+    int_A = int(string_A)
+    int_B = str(int_A + 1)
+    result = []
+    string_B = list(int_B)
+    for i in range(len(string_B)):
+        temp = string_B[i]
+        result.append(int(temp))
+    return result
 
-    A[-1] += 1
-    for i in reversed(range(1, len(A))):
-        if A[i] != 10:
-            break
-        A[i] = 0
-        A[i - 1] += 1
-    if A[0] == 10:
-        # There is a carry-out, so we need one more digit to store the result.
-        # A slick way to do this is to append a 0 at the end of the array,
-        # and update the first entry to 1.
-        A[0] = 1
-        A.append(0)
-    return A
 
 
 if __name__ == '__main__':
