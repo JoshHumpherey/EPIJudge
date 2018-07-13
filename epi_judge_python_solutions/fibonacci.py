@@ -4,12 +4,18 @@ cache = {}
 
 
 def fibonacci(n):
-
+    fibmap = dict()
+    fibmap[0] = 0
+    fibmap[1] = 1
     if n <= 1:
-        return n
-    elif n not in cache:
-        cache[n] = fibonacci(n - 1) + fibonacci(n - 2)
-    return cache[n]
+        return fibmap[n]
+    else:
+        counter = 2
+        while (counter <= n):
+            fibmap[counter] = fibmap[counter-1]+fibmap[counter-2]
+            counter += 1
+    return fibmap[n]
+
 
 
 if __name__ == '__main__':

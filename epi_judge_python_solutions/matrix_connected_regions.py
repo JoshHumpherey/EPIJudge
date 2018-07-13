@@ -2,20 +2,21 @@ import collections
 
 from test_framework import generic_test
 
+def flip_color(r, c, image):
+    target_color = image[r][c]
+    result = dfs(r, c, image, target_color)
+    return result
 
-def flip_color(x, y, image):
-
-    color = image[x][y]
-    q = collections.deque([(x, y)])
-    image[x][y] = 1 - image[x][y]  # Flips.
-    while q:
-        x, y = q.popleft()
-        for next_x, next_y in ((x, y + 1), (x, y - 1), (x + 1, y), (x - 1, y)):
-            if (0 <= next_x < len(image) and 0 <= next_y < len(image[next_x])
-                    and image[next_x][next_y] == color):
-                # Flips the color.
-                image[next_x][next_y] = 1 - image[next_x][next_y]
-                q.append((next_x, next_y))
+def dfs(r, c, image, target):
+    if r < 0 or c < 0 or r >= len(image) or c >= len(image[0]) or image[r][c] != target:
+        return image
+    else:
+        image[r][c] = True
+        img1 = dfs(r+1, c, image, target)
+        img2 = dfs(r-1, c, img1, target)
+        img3 = dfs(r, c+1, img2, target)
+        img4 = dfs(r, c-1, img3, target)
+        return img4
 
 
 def flip_color_wrapper(x, y, image):
