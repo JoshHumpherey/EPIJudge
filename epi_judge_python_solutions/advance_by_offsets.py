@@ -1,14 +1,18 @@
 from test_framework import generic_test
 
 
-def can_reach_end(A):
+def can_reach_end(arr):
+    if len(arr) < 2:
+        return True
+    max_advance = 0
+    for i in range(len(arr)):
+        if arr[i] + i > max_advance:
+            max_advance = arr[i]+i
+        if arr[i] == 0 and i >= max_advance:
+            return False
 
-    furthest_reach_so_far, last_index = 0, len(A) - 1
-    i = 0
-    while i <= furthest_reach_so_far and furthest_reach_so_far < last_index:
-        furthest_reach_so_far = max(furthest_reach_so_far, A[i] + i)
-        i += 1
-    return furthest_reach_so_far >= last_index
+        if max_advance >= len(arr)-1:
+            return True
 
 
 if __name__ == '__main__':
