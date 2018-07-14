@@ -8,12 +8,10 @@ from test_framework.random_sequence_checker import (
 from test_framework.test_utils import enable_executor_hook
 
 
-def random_sampling(k, A):
-
+def random_sampling(k, arr):
     for i in range(k):
-        # Generate a random index in [i, len(A) - 1].
-        r = random.randint(i, len(A) - 1)
-        A[i], A[r] = A[r], A[i]
+        rand_index = random.randint(i, len(arr)-1)
+        arr[rand_index], arr[i] = arr[i], arr[rand_index]
 
 
 # Pythonic solution
