@@ -5,10 +5,16 @@ from test_framework.test_failure import PropertyName, TestFailure
 from test_framework.test_utils import enable_executor_hook
 
 
-def rearrange(A):
+def rearrange(arr):
+    sorted_arr = sorted(arr)
+    for i in range(len(arr)-1):
+        if i % 2 == 1:
+            temp = sorted_arr[i]
+            sorted_arr[i] = sorted_arr[i+1]
+            sorted_arr[i+1] = temp
+    arr = sorted_arr
+    return arr
 
-    for i in range(len(A)):
-        A[i:i + 2] = sorted(A[i:i + 2], reverse=i % 2)
 
 
 @enable_executor_hook
