@@ -1,26 +1,26 @@
 from test_framework import generic_test
-
+import math
 
 def buy_and_sell_stock_twice(prices):
+    profits = [0]
+    for divide in range(0,len(prices)):
+        max1 = 0
+        min1 = prices[0]
+        max2 = 0
+        min2 = prices[divide]
+        for i1 in range(1, divide):
+            if prices[i1] < min1:
+                min1 = prices[i1]
+            if prices[i1] - min1 > max1:
+                max1 = (prices[i1] - min1)
+        for i2 in range(divide, len(prices)):
+            if prices[i2] < min2:
+                min2 = prices[i2]
+            if prices[i2]-min2 > max2:
+                max2 = (prices[i2]-min2)
+        profits.append(max1 + max2)
+    return max(profits)
 
-    max_total_profit, min_price_so_far = 0.0, float('inf')
-    first_buy_sell_profits = [0] * len(prices)
-    # Forward phase. For each day, we record maximum profit if we sell on that
-    # day.
-    for i, price in enumerate(prices):
-        min_price_so_far = min(min_price_so_far, price)
-        max_total_profit = max(max_total_profit, price - min_price_so_far)
-        first_buy_sell_profits[i] = max_total_profit
-
-    # Backward phase. For each day, find the maximum profit if we make the
-    # second buy on that day.
-    max_price_so_far = float('-inf')
-    for i, price in reversed(list(enumerate(prices[1:], 1))):
-        max_price_so_far = max(max_price_so_far, price)
-        max_total_profit = max(
-            max_total_profit,
-            max_price_so_far - price + first_buy_sell_profits[i - 1])
-    return max_total_profit
 
 
 def buy_and_sell_stock_twice_constant_space(prices):
