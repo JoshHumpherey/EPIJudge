@@ -1,27 +1,31 @@
 from test_framework import generic_test
+test_mat = [[1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]]
+def rotate_matrix(matrix):
+    n = len(matrix)-1
+    for i in range(0, n):
+        temp = matrix[0][i]
+        matrix[0][i] = matrix[n][i]
+        matrix[n][i] = matrix[n][n-i]
+        matrix[n][n-i] = matrix[n-i][0]
+        matrix[n-i][0] = temp
+    return matrix
 
-
-def rotate_matrix(square_matrix):
-
-    matrix_size = len(square_matrix) - 1
-    for i in range(len(square_matrix) // 2):
-        for j in range(i, matrix_size - i):
-            # Perform a 4-way exchange. Note that A[~i] for i in [0, len(A) - 1]
-            # is A[-(i + 1)].
-            (square_matrix[i][j], square_matrix[~j][i], square_matrix[~i][~j],
-             square_matrix[j][~i]) = (square_matrix[~j][i],
-                                      square_matrix[~i][~j],
-                                      square_matrix[j][~i],
-                                      square_matrix[i][j])
-
+def print_mat(matrix):
+    print("Matrix: ")
+    for i in range(len(matrix)):
+        print(matrix[i])
+    print()
 
 def rotate_matrix_wrapper(square_matrix):
     rotate_matrix(square_matrix)
     return square_matrix
 
-
-if __name__ == '__main__':
-    exit(
-        generic_test.generic_test_main("matrix_rotation.py",
-                                       'matrix_rotation.tsv',
-                                       rotate_matrix_wrapper))
+result = rotate_matrix(test_mat)
+print_mat(result)
+#if __name__ == '__main__':
+#    exit(
+#        generic_test.generic_test_main("matrix_rotation.py",
+#                                       'matrix_rotation.tsv',
+#                                       rotate_matrix_wrapper))
