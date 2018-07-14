@@ -3,34 +3,61 @@ import math
 
 from test_framework import generic_test
 
-
-# Check if a partially filled matrix has any conflicts.
 def is_valid_sudoku(partial_assignment):
+    # ROWS
+    for r in range(len(partial_assignment)):
+        row_map = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0}
+        for c in range(len(partial_assignment)):
+            square = partial_assignment[r][c]
+            if square != 0:
+                if row_map[square] >= 1:
+                    print_board(partial_assignment)
+                    return False
+                else:
+                    row_map[square] += 1
+    # COLUMNS
+    for c in range(len(partial_assignment)):
+        column_map = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0}
+        for r in range(len(partial_assignment)):
+            square = partial_assignment[r][c]
+            if square != 0:
+                if column_map[square] >= 1:
+                    print_board(partial_assignment)
+                    return False
+                else:
+                    column_map[square] += 1
+    check_board(0,0,partial_assignment)
+    check_board(2,0,partial_assignment)
+    check_board(5,0,partial_assignment)
+    check_board(2,0,partial_assignment)
+    check_board(2,5,partial_assignment)
+    check_board(2,5,partial_assignment)
+    check_board(2,0,partial_assignment)
+    check_board(5,2,partial_assignment)
+    check_board(5,5,partial_assignment)
+    return True
 
-    # Return True if subarray
-    # partial_assignment[start_row:end_row][start_col:end_col] contains any
-    # duplicates in {1, 2, ..., len(partial_assignment)}; otherwise return
-    # False.
-    def has_duplicate(block):
-        block = list(filter(lambda x: x != 0, block))
-        return len(block) != len(set(block))
+def check_board(r,c, board):
+    try:
+        square_map = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0}
+        for r in range(r, r+2):
+            for c in range(c, c+2):
+                square = board[r][c]
+                if square != 0:
+                    if square_map[square] >= 1:
+                        return False
+                    else:
+                        square_map[square] += 1
+    except:
+        print("R: " + str(r) + ", C: " + str(c))
+    return True
 
-    n = len(partial_assignment)
-    # Check row and column constraints.
-    if any(
-            has_duplicate([partial_assignment[i][j] for j in range(n)])
-            or has_duplicate([partial_assignment[j][i] for j in range(n)])
-            for i in range(n)):
-        return False
-
-    # Check region constraints.
-    region_size = int(math.sqrt(n))
-    return all(not has_duplicate([
-        partial_assignment[a][b]
-        for a in range(region_size * I, region_size * (
-            I + 1)) for b in range(region_size * J, region_size * (J + 1))
-    ]) for I in range(region_size) for J in range(region_size))
-
+def print_board(board):
+    print()
+    print("Sudoku Board: " )
+    for i in range(len(board)):
+        print(board[i])
+    print()
 
 # Pythonic solution that exploits the power of list comprehension.
 def is_valid_sudoku_pythonic(partial_assignment):
