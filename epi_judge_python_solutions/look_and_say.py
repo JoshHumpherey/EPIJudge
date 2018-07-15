@@ -4,21 +4,42 @@ from test_framework import generic_test
 
 
 def look_and_say(n):
-    def next_number(s):
-        result, i = [], 0
-        while i < len(s):
-            count = 1
-            while i + 1 < len(s) and s[i] == s[i + 1]:
-                i += 1
-                count += 1
-            result.append(str(count) + s[i])
-            i += 1
-        return ''.join(result)
+    print()
+    pattern = dict()
+    pattern[1] = "1"
+    pattern[2] = "11"
+    pattern[3] = "21"
+    pattern[4] = "1211"
+    for i in range(5, n+1):
+        temp = []
+        to_parse = pattern[i-1]
+        current_char = to_parse[0]
+        current_count = 1
+        for j in range(1, len(to_parse)):
+            if to_parse[j] == current_char:
+                if len(to_parse)-1 == j:
+                    partial = str(current_count+1) + str(current_char)
+                    temp.append(partial)
+                else:
+                    current_count += 1
+                    current_char = to_parse[j]
+            else:
+                partial = str(current_count) + str(current_char)
+                temp.append(partial)
+                current_count = 1
+                current_char = to_parse[j]
+                if len(to_parse)-1 == j:
+                    partial = str(current_count) + str(current_char)
+                    temp.append(partial)
+        final_string = ''.join(temp)
+        pattern[i] = final_string
+    for i in range(1, n):
+        print(str(i) + ": " + str(pattern[i]))
 
-    s = '1'
-    for _ in range(1, n):
-        s = next_number(s)
-    return s
+    return pattern[n]
+
+result = look_and_say(2)
+print(result)
 
 
 # Pythonic solution uses the power of itertools.groupby().
