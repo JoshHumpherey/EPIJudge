@@ -4,30 +4,58 @@ from test_framework import generic_test
 from test_framework.test_failure import TestFailure
 
 
-def decoding(s):
+def decoding(coded_string):
+    coded_len = len(coded_string)
+    coded_list = list(coded_string)
+    decoded_list = []
+    current_num = []
+    current_char = coded_string[0]
+    for i in range(1, coded_len):
+        s = coded_list[i]
+        if s.isnumeric():
+            current_num.append(s)
+            if coded_len-1 == i:
+                my_base = ''.join(current_num)
+                my_int = int(my_base)
+                for j in range(my_int):
+                    decoded_list.append(current_char)
 
-    count, result = 0, []
-    for c in s:
-        if c.isdigit():
-            count = count * 10 + int(c)
-        else:  # c is a letter of alphabet.
-            result.append(c * count)  # Appends count copies of c to result.
-            count = 0
-    return ''.join(result)
+        if s.isalpha():
+            my_base = ''.join(current_num)
+            my_int = int(my_base)
+            for j in range(my_int):
+                decoded_list.append(current_char)
+            current_num = []
+            current_char = s
+    final = ''.join(decoded_list)
+    print("FINAL: " + str(final))
+    return final
 
+def encoding(plain_string):
+    encoded_list = []
+    decoded_list = list(plain_string)
+    last_char = decoded_list[0]
+    repeat_count = 1
+    for i in range(1, len(decoded_list)):
+        char = decoded_list[i]
+        if char == last_char:
+            repeat_count += 1
+        else:
+            encoding = last_char + str(repeat_count)
+            encoded_list.append(encoding)
+            last_char = char
+            repeat_count = 1
 
-def encoding(s):
+        if len(decoded_list)-1 == i:
+            encoding = char + str(repeat_count)
+            encoded_list.append(encoding)
+    return ''.join(encoded_list)
 
-    result, count = [], 1
-    for i in range(1, len(s) + 1):
-        if i == len(s) or s[i] != s[i - 1]:
-            # Found new character so write the count of previous character.
-            result.append(str(count) + s[i - 1])
-            count = 1
-        else:  # s[i] == s[i - 1].
-            count += 1
-    return ''.join(result)
-
+test_str = "abcccbba"
+secret = encoding(test_str)
+print("Encoded String: " + str(secret))
+decrypted = decoding(secret)
+print("Decoded String: " + str(decrypted))
 
 def encoding_pythonic(s):
     return ''.join(str(len(list(g))) + c for c, g in itertools.groupby(s))
