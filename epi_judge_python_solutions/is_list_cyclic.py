@@ -6,13 +6,14 @@ from test_framework.test_utils import enable_executor_hook
 
 
 def has_cycle(head):
-    nodemap = dict()
-    while head != None:
+    nodemap = set()
+    while(head != None):
         if head.data in nodemap:
             return head
         else:
-            nodemap[head.data] = head
-        head = head.next
+            key = head.data
+            nodemap.add(key)
+            head = head.next
     return None
 
 
