@@ -5,8 +5,8 @@ def get_valid_ip_address(s):
     def is_valid_part(s):
         # '00', '000', '01', etc. are not valid, but '0' is valid.
         return len(s) == 1 or (s[0] != '0' and int(s) <= 255)
-
-    result, parts = [], [None] * 4
+    result = []
+    parts = [None] * 4
     for i in range(1, min(4, len(s))):
         parts[0] = s[:i]
         if is_valid_part(parts[0]):
