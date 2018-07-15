@@ -5,25 +5,19 @@ from test_framework.test_failure import TestFailure
 from test_framework.test_utils import enable_executor_hook
 
 
-def overlapping_no_cycle_lists(l0, l1):
-    def length(L):
-        length = 0
-        while L:
-            length += 1
-            L = L.next
-        return length
-
-    l0_len, l1_len = length(l0), length(l1)
-    if l0_len > l1_len:
-        l0, l1 = l1, l0  # l1 is the longer list
-    # Advances the longer list to get equal length lists.
-    for _ in range(abs(l0_len - l1_len)):
-        l1 = l1.next
-
-    while l0 and l1 and l0 is not l1:
-        l0, l1 = l0.next, l1.next
-    return l0  # None implies there is no overlap between l0 and l1.
-
+def overlapping_no_cycle_lists(head1, head2):
+    print()
+    nodemap = dict()
+    while (head1 != None):
+        nodemap[head1.data] = head1
+        head1 = head1.next
+    while (head2 != None):
+        if head2.data in nodemap:
+            head_ref = nodemap[head2.data]
+            if head_ref == head2:
+                return head2
+        head2 = head2.next
+    return None
 
 @enable_executor_hook
 def overlapping_no_cycle_lists_wrapper(executor, l0, l1, common):
