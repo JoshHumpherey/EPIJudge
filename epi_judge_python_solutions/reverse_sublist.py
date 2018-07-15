@@ -3,19 +3,27 @@ from test_framework import generic_test
 
 
 def reverse_sublist(L, start, finish):
+    temp = ListNode(0, L)
+    pointer = temp
+    values_to_reverse = []
+    index = 1
+    while (L != None):
+        if index >= start and index <= finish:
+            values_to_reverse.append(L.data)
+        L = L.next
+        index += 1
+    values_to_reverse.reverse()
+    L = temp.next
+    index = 1
+    counter = 0
+    while (L != None):
+        if index >= start and index <= finish:
+            L.data = values_to_reverse[counter]
+            counter += 1
+        index += 1
+        L = L.next
+    return temp.next
 
-    dummy_head = sublist_head = ListNode(0, L)
-    for _ in range(1, start):
-        sublist_head = sublist_head.next
-
-    # Reverses sublist.
-    sublist_iter = sublist_head.next
-    for _ in range(finish - start):
-        temp = sublist_iter.next
-        sublist_iter.next, temp.next, sublist_head.next = (temp.next,
-                                                           sublist_head.next,
-                                                           temp)
-    return dummy_head.next
 
 
 if __name__ == '__main__':
