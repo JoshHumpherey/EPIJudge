@@ -3,20 +3,28 @@ from test_framework import generic_test
 
 
 def even_odd_merge(L):
-
-    if not L:
-        return L
-
-    even_dummy_head, odd_dummy_head = ListNode(0), ListNode(0)
-    tails, turn = [even_dummy_head, odd_dummy_head], 0
-    while L:
-        tails[turn].next = L
+    orig = L
+    evens = []
+    odds = []
+    even = True
+    while(L != None):
+        if even == True:
+            evens.append(L.data)
+            even = False
+        else:
+            odds.append(L.data)
+            even = True
         L = L.next
-        tails[turn] = tails[turn].next
-        turn ^= 1  # Alternate between even and odd.
-    tails[1].next = None
-    tails[0].next = odd_dummy_head.next
-    return even_dummy_head.next
+
+    L = orig
+    result = evens + odds
+    index = 0
+    while (L != None):
+        L.data = result[index]
+        index += 1
+        L = L.next
+    return orig
+
 
 
 if __name__ == '__main__':
