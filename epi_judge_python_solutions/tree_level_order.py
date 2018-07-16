@@ -2,18 +2,28 @@ from test_framework import generic_test
 
 
 def binary_tree_depth_order(tree):
-
     result = []
     if not tree:
         return result
 
-    curr_depth_nodes = [tree]
-    while curr_depth_nodes:
-        result.append([curr.data for curr in curr_depth_nodes])
-        curr_depth_nodes = [
-            child for curr in curr_depth_nodes
-            for child in (curr.left, curr.right) if child
-        ]
+    current_level_nodes = [tree]
+    while current_level_nodes:
+        level = []
+        for node in current_level_nodes:
+            level.append(node.data)
+        result.append(level)
+
+        next_level = []
+        for node in current_level_nodes:
+            if node.left != None:
+                next_level.append(node.left)
+            if node.right != None:
+                next_level.append(node.right)
+        current_level_nodes = [] #empty the queue
+        for node in next_level:
+            current_level_nodes.append(node)
+
+
     return result
 
 
