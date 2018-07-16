@@ -6,33 +6,40 @@ from test_framework.test_failure import TestFailure
 
 class Stack:
 
-    ElementWithCachedMax = collections.namedtuple('ElementWithCachedMax',
+    ElementWithCachedMax = collections.namedtuple('storage',
                                                   ('element', 'max'))
 
     def __init__(self):
-        self._element_with_cached_max = []
+        self.storage = []
+        self.my_max = 0
 
     def empty(self):
-
-        return len(self._element_with_cached_max) == 0
+        if self.storage == []:
+            return True
+        else:
+            return False
 
     def max(self):
-
-        if self.empty():
-            raise IndexError('max(): empty stack')
-        return self._element_with_cached_max[-1].max
+        result = self.my_max
+        return result
 
     def pop(self):
-
-        if self.empty():
-            raise IndexError('pop(): empty stack')
-        return self._element_with_cached_max.pop().element
+        if self.empty() == True:
+            return None
+        else:
+            popped_val = self.storage.pop()
+            if popped_val == self.my_max:
+                if len(self.storage) == 0:
+                    self.my_max = 0
+                else:
+                    self.my_max = max(self.storage)
+            return popped_val
 
     def push(self, x):
+        self.storage.append(x)
+        if x > self.my_max:
+            self.my_max = x
 
-        self._element_with_cached_max.append(
-            self.ElementWithCachedMax(x, x
-                                      if self.empty() else max(x, self.max())))
 
 
 def stack_tester(ops):
