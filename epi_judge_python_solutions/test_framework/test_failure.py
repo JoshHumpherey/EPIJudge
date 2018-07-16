@@ -51,9 +51,11 @@ class TestFailure(Exception):
         super().__init__()
         self._properties = []
         self._description = description
+        print('\n')
 
     def with_property(self, name, value):
         self._properties.append(Property(name, value))
+        print('\n')
         return self
 
     def with_mismatch_info(self, mismatch_index, expected_item, result_item):
@@ -63,6 +65,7 @@ class TestFailure(Exception):
             .with_property(PropertyName.RESULT_ITEM, result_item)
 
     def get_description(self):
+        print('\n')
         return self._description
 
     def get_max_property_name_length(self):
