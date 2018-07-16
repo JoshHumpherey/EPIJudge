@@ -8,11 +8,11 @@ def add_two_numbers(L1, L2):
     carry = 0
 
     while L1 or L2 or carry:
-        val = carry + (L1.data if L1 else 0) + (L2.data if L2 else 0)
+        sum = (L1.data if L1 else 0) + (L2.data if L2 else 0) + carry
         L1 = (L1.next if L1 else None)
         L2 = (L2.next if L2 else None)
-        pointer.next = ListNode(val % 10)
-        carry = val // 10
+        pointer.next = ListNode(sum % 10)
+        carry = sum // 10
         pointer = pointer.next
     return orig.next
 
