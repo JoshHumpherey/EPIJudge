@@ -2,16 +2,21 @@ from test_framework import generic_test
 
 
 def remove_duplicates(L):
+    original = L
+    unique_vals = set()
+    while(L != None):
+        key = L.data
+        if key in unique_vals:
+            if L.next == None:
+                L.data = None
+            else:
+                L.data = L.next.data
+                L.next = L.next.next
+        else:
+            unique_vals.add(key)
+            L = L.next
+    return original
 
-    it = L
-    while it:
-        # Uses next_distinct to find the next distinct value.
-        next_distinct = it.next
-        while next_distinct and next_distinct.data == it.data:
-            next_distinct = next_distinct.next
-        it.next = next_distinct
-        it = next_distinct
-    return L
 
 
 if __name__ == '__main__':
