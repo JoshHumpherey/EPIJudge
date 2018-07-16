@@ -7,33 +7,37 @@ from test_framework.test_failure import TestFailure
 from test_framework.test_utils import enable_executor_hook
 
 
-def lca(tree, node0, node1):
+def lca(tree, N1, N2):
+    common_ancestors = [tree]
+    print("ROOT: " + str(tree.data))
+    partial = [tree]
+    while partial:
+        node = partial.pop()
+        left_side = dfs(node.left, N1, N2)
+        right_side = dfs(node.right, N1, N2)
+        print("Left side: " + str(left_side) + " Right side: " + str(right_side))
+        if left_side != False:
+            if node.left != N1 and node.left != N2:
+                common_ancestors.append(node.left)
+                partial.append(node.left)
+            print("Adding to partial: " + str(node.data))
+        if right_side != False:
+            if node.right != N1 and node.right != N2:
+                common_ancestors.append(node.right)
+                partial.append(node.right)
+            print("Adding to partial: " + str(node.data))
 
-    Status = collections.namedtuple('Status', ('num_target_nodes', 'ancestor'))
+    return common_ancestors[-1]
 
-    # Returns an object consisting of an int and a node. The int field is 0,
-    # 1, or 2 depending on how many of {node0, node1} are present in tree. If
-    # both are present in tree, when ancestor is assigned to a non-null value,
-    # it is the LCA.
-    def lca_helper(tree, node0, node1):
-        if not tree:
-            return Status(0, None)
+def dfs(root, N1, N2):
+    if root == None:
+        return False
+    if root == N1 or root == N2:
+        return True
 
-        left_result = lca_helper(tree.left, node0, node1)
-        if left_result.num_target_nodes == 2:
-            # Found both nodes in the left subtree.
-            return left_result
-        right_result = lca_helper(tree.right, node0, node1)
-        if right_result.num_target_nodes == 2:
-            # Found both nodes in the right subtree.
-            return right_result
-        num_target_nodes = (
-            left_result.num_target_nodes + right_result.num_target_nodes +
-            (node0, node1).count(tree))
-        return Status(num_target_nodes, tree
-                      if num_target_nodes == 2 else None)
-
-    return lca_helper(tree, node0, node1).ancestor
+    left = dfs(root.left, N1, N2)
+    right = dfs(root.right, N1, N2)
+    return left == right
 
 
 @enable_executor_hook
