@@ -23,7 +23,6 @@ def binary_tree_depth_order(tree):
         for node in next_level:
             current_level_nodes.append(node)
 
-
     return result
 
 

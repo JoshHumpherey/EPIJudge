@@ -3,41 +3,27 @@ from test_framework.test_failure import TestFailure
 
 
 class Queue:
-
-    SCALE_FACTOR = 2
-
     def __init__(self, capacity):
-
-        self._entries = [None] * capacity
-        self._head = self._tail = self._num_queue_elements = 0
+        self._entries = [None] * capacity * 100
+        self.capacity = capacity
+        self.current_count = 0
 
     def enqueue(self, x):
+        print("Queing " + str(x) + " to index: " + str(self.current_count))
+        self._entries[self.current_count] = x
+        self.current_count += 1
 
-        if self._num_queue_elements == len(self._entries):  # Needs to resize.
-            # Makes the queue elements appear consecutively.
-            self._entries = (
-                self._entries[self._head:] + self._entries[:self._head])
-            # Resets head and tail.
-            self._head, self._tail = 0, self._num_queue_elements
-            self._entries += [None] * (
-                len(self._entries) * Queue.SCALE_FACTOR - len(self._entries))
 
-        self._entries[self._tail] = x
-        self._tail = (self._tail + 1) % len(self._entries)
-        self._num_queue_elements += 1
 
     def dequeue(self):
+        if (self.current_count == 0):
+            return None
 
-        if not self._num_queue_elements:
-            raise IndexError('empty queue')
-        self._num_queue_elements -= 1
-        result = self._entries[self._head]
-        self._head = (self._head + 1) % len(self._entries)
-        return result
+        self.current_count -= 1
+        return self._entries.pop(0)
 
     def size(self):
-
-        return self._num_queue_elements
+        return self.current_count
 
 
 def queue_tester(ops):
