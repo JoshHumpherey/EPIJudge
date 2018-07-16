@@ -1,18 +1,27 @@
 from test_framework import generic_test
 
 
-def is_symmetric(tree):
-    def check_symmetric(subtree_0, subtree_1):
-        if not subtree_0 and not subtree_1:
-            return True
-        elif subtree_0 and subtree_1:
-            return (subtree_0.data == subtree_1.data
-                    and check_symmetric(subtree_0.left, subtree_1.right)
-                    and check_symmetric(subtree_0.right, subtree_1.left))
-        # One subtree is empty, and the other is not.
-        return False
+def is_symmetric(root):
+    start_list = [root.data]
+    left_list = construct_list(root.left, start_list, True)
+    right_list = construct_list(root.right, start_list, False)
+    print("Left list: " + str(left_list))
+    print("Right list: " + str(right_list))
+    return left_list == right_list
 
-    return not tree or check_symmetric(tree.left, tree.right)
+def construct_list(root, storage, is_left):
+    if root == None:
+        return storage
+    else:
+        current_val = root.data
+        if is_left == True:
+            left1 = construct_list(root.left, [current_val], True)
+            right1 = construct_list(root.right, [current_val], True)
+            return storage + left1 + right1
+        else:
+            right2 = construct_list(root.right, [current_val], False)
+            left2 = construct_list(root.left, [current_val], False)
+            return storage + right2 + left2
 
 
 if __name__ == '__main__':
