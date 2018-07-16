@@ -2,29 +2,25 @@ from test_framework import generic_test
 
 
 def cyclically_right_shift_list(L, k):
+    orig = L
+    values = []
+    while (L != None):
+        value = L.data
+        values.append(value)
+        L = L.next
+    total = len(values)
+    shifted_vals = values[total-k:] + values[:(total-k)]
+    print(shifted_vals)
+    L = orig
+    i = 0
+    while (L != None):
+        L.data = shifted_vals[i]
+        i += 1
+        L = L.next
+    return orig
 
-    if not L:
-        return L
 
-    # Computes the length of L and the tail.
-    tail, n = L, 1
-    while tail.next:
-        n += 1
-        tail = tail.next
 
-    k %= n
-    if k == 0:
-        return L
-
-    tail.next = L  # Makes a cycle by connecting the tail to the head.
-    steps_to_new_head, new_tail = n - k, tail
-    while steps_to_new_head:
-        steps_to_new_head -= 1
-        new_tail = new_tail.next
-
-    new_head = new_tail.next
-    new_tail.next = None
-    return new_head
 
 
 if __name__ == '__main__':
