@@ -1,7 +1,8 @@
 from test_framework import generic_test
-
+import collections
 
 def cyclically_right_shift_list(L, k):
+    print()
     orig = L
     values = []
     while (L != None):
@@ -9,7 +10,9 @@ def cyclically_right_shift_list(L, k):
         values.append(value)
         L = L.next
     total = len(values)
-    shifted_vals = values[total-k:] + values[:(total-k)]
+    print("K: " + str(k))
+    shifted_vals = collections.deque(values)
+    shifted_vals.rotate(k)
     print(shifted_vals)
     L = orig
     i = 0
