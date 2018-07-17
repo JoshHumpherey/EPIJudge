@@ -1,18 +1,26 @@
 from test_framework import generic_test
 
 
-def sum_root_to_leaf(tree, partial_path_sum=0):
-
-    if not tree:
+def sum_root_to_leaf(root, partial_path_sum=0):
+    if root == None:
         return 0
-
-    partial_path_sum = partial_path_sum * 2 + tree.data
-    if not tree.left and not tree.right:  # Leaf.
-        return partial_path_sum
-    # Non-leaf.
-    return (sum_root_to_leaf(tree.left, partial_path_sum) +
-            sum_root_to_leaf(tree.right, partial_path_sum))
-
+    sums = []
+    def dfs(root, current_string):
+        current_string += str(root.data)
+        if root.left == None and root.right == None:
+            temp = int(current_string, 2)
+            sums.append(current_string)
+        else:
+            if root.left != None:
+                dfs(root.left, current_string)
+            if root.right != None:
+                dfs(root.right, current_string)
+    dfs(root, "")
+    total = 0
+    for binary in sums:
+        my_int = int(binary, 2)
+        total += my_int
+    return total
 
 if __name__ == '__main__':
     exit(
