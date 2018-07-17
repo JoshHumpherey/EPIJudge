@@ -3,22 +3,27 @@ from test_framework import generic_test
 
 class Queue:
     def __init__(self):
-        self._enq, self._deq = [], []
+        self.main_stack = []
+        self.buffer_stack = []
 
     def enqueue(self, x):
-
-        self._enq.append(x)
+        if self.main_stack == []:
+            self.main_stack.append(x)
+        else:
+            for i in range(len(self.main_stack)):
+                temp = self.main_stack.pop()
+                self.buffer_stack.append(temp)
+            self.main_stack.append(x)
+            for i in range(len(self.buffer_stack)):
+                temp = self.buffer_stack.pop()
+                self.main_stack.append(temp)
 
     def dequeue(self):
+        if self.main_stack == []:
+            return None
+        else:
+            return self.main_stack.pop()
 
-        if not self._deq:
-            # Transfers the elements in _enq to _deq.
-            while self._enq:
-                self._deq.append(self._enq.pop())
-
-        if not self._deq:  # _deq is still empty!
-            raise IndexError('empty queue')
-        return self._deq.pop()
 
 
 def queue_tester(ops):
