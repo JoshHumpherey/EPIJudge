@@ -6,24 +6,27 @@ from test_framework.test_utils import enable_executor_hook
 
 
 def find_successor(node):
+    # Check right subtree
     if node.right:
-        return node.right
-    elif node.parent != None:
-        test = node.parent
-        if parent.left:
-            if parent.left == node:
-                return node
-        else:
-            print("Edge case")
-    else:
-        return None
+        node = node.right
+        while node.left:
+            node = node.left
+        return node
+
+    # Find the closest ancestor whose left subtree contains node.
+    while node.parent and node.parent.right is node:
+        node = node.parent
+    return node.parent
 
 
 @enable_executor_hook
 def find_successor_wrapper(executor, tree, node_idx):
     node = must_find_node(tree, node_idx)
+
     result = executor.run(functools.partial(find_successor, node))
+
     return result.data if result else -1
+
 
 if __name__ == '__main__':
     exit(
