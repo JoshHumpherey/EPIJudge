@@ -3,12 +3,14 @@ from test_framework import generic_test
 
 def preorder_traversal(tree):
 
-    path, result = [tree], []
+    path = [tree]
+    result = []
     while path:
-        curr = path.pop()
-        if curr:
-            result.append(curr.data)
-            path += [curr.right, curr.left]
+        current_node = path.pop()
+        if current_node != None:
+            result.append(current_node.data)
+            path.append(current_node.right)
+            path.append(current_node.left)
     return result
 
 

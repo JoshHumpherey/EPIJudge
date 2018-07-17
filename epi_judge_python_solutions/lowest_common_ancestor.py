@@ -7,37 +7,38 @@ from test_framework.test_failure import TestFailure
 from test_framework.test_utils import enable_executor_hook
 
 
-def lca(tree, N1, N2):
-    common_ancestors = [tree]
-    print("ROOT: " + str(tree.data))
-    partial = [tree]
-    while partial:
-        node = partial.pop()
-        left_side = dfs(node.left, N1, N2)
-        right_side = dfs(node.right, N1, N2)
-        print("Left side: " + str(left_side) + " Right side: " + str(right_side))
-        if left_side != False:
-            if node.left != N1 and node.left != N2:
-                common_ancestors.append(node.left)
-                partial.append(node.left)
-            print("Adding to partial: " + str(node.data))
-        if right_side != False:
-            if node.right != N1 and node.right != N2:
-                common_ancestors.append(node.right)
-                partial.append(node.right)
-            print("Adding to partial: " + str(node.data))
+def lca(root, N1, N2):
+    common_nodes = []
+    queue = [root]
 
-    return common_ancestors[-1]
+    def dfs(root, target):
+        left = False
+        right = False
+        if root == None:
+            return False
+        if root == target:
+            return True
+        if root.left != None:
+            left = dfs(root.left, target)
+        if root.right != None:
+            right = dfs(root.right, target)
+        return left or right
 
-def dfs(root, N1, N2):
-    if root == None:
-        return False
-    if root == N1 or root == N2:
-        return True
 
-    left = dfs(root.left, N1, N2)
-    right = dfs(root.right, N1, N2)
-    return left == right
+    while queue:
+        for node in queue:
+            target1 = dfs(node, N1)
+            target2 = dfs(node, N2)
+            if (target1 and target2):
+                common_nodes.append(node)
+        temp = []
+        for node in queue:
+            if node.left:
+                temp.append(node.left)
+            if node.right:
+                temp.append(node.right)
+        queue = temp
+    return common_nodes[-1]
 
 
 @enable_executor_hook

@@ -2,24 +2,25 @@ from test_framework import generic_test
 
 
 def sum_root_to_leaf(root, partial_path_sum=0):
-    sum_list = []
-    def dfs(root, running_total):
-        if root == None:
-            sum_list.append(running_total)
+    if root == None:
+        return 0
+    sums = []
+    def dfs(root, current_string):
+        current_string += str(root.data)
+        if root.left == None and root.right == None:
+            temp = int(current_string, 2)
+            sums.append(current_string)
         else:
-            running_total += str(root.data)
-            dfs(root.left, running_total)
-            dfs(root.right, running_total)
-
+            if root.left != None:
+                dfs(root.left, current_string)
+            if root.right != None:
+                dfs(root.right, current_string)
     dfs(root, "")
     total = 0
-    for num in sum_list:
-        temp = int(num, 2)
-        total += temp
-        print(temp)
-    return total // 2
-
-
+    for binary in sums:
+        my_int = int(binary, 2)
+        total += my_int
+    return total
 
 if __name__ == '__main__':
     exit(

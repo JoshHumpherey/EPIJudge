@@ -2,8 +2,9 @@ from test_framework import generic_test
 
 
 def inorder_traversal(tree):
+    prev = None
+    result = []
 
-    prev, result = None, []
     while tree:
         if prev is tree.parent:
             # We came down to tree from prev.
@@ -22,7 +23,7 @@ def inorder_traversal(tree):
             next = tree.right or tree.parent
         else:  # Done with both children, so move up.
             next = tree.parent
-
+    
         prev, tree = tree, next
     return result
 
