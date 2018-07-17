@@ -1,16 +1,26 @@
 from test_framework import generic_test
 
 
-def has_path_sum(tree, remaining_weight):
+def has_path_sum(root, remaining_weight):
+    def dfs(root, target, current_sum):
+        if root.left == None and root.right == None:
+            current_sum += root.data
+            if target == current_sum:
+                return True
+        else:
+            right = False
+            left = False
+            current_sum += root.data
+            if root.left:
+                left = dfs(root.left, target, current_sum)
+            if root.right:
+                right = dfs(root.right, target, current_sum)
+            return left or right
 
-    if not tree:
+    if dfs(root, remaining_weight, 0) == True:
+        return True
+    else:
         return False
-    if not tree.left and not tree.right:  # Leaf.
-        return remaining_weight == tree.data
-    # Non-leaf.
-    return (has_path_sum(tree.left, remaining_weight - tree.data)
-            or has_path_sum(tree.right, remaining_weight - tree.data))
-
 
 if __name__ == '__main__':
     exit(
