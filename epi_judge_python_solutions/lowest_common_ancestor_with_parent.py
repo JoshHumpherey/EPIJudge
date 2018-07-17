@@ -6,29 +6,23 @@ from test_framework.test_failure import TestFailure
 from test_framework.test_utils import enable_executor_hook
 
 
-def lca(node0, node1):
-    def get_depth(node):
-        depth = 0
-        while node:
-            depth += 1
-            node = node.parent
-        return depth
+def lca(N1, N2):
+    nodemap = {N1.data:N1,N2.data:N2}
+    while N1.parent or N2.parent:
+        if N1.parent.data in nodemap:
+            return N1.parent
+        else:
+            nodemap[N1.parent.data] = N1.parent
+        if N2.parent.data in nodemap:
+            return N2.parent
+        else:
+            nodemap[N2.parent.data] = N2.parent
+        N1 = (N1.parent if not N1 else None)
+        N2 = (N2.parent if not N2 else None)
+    return N1
 
-    depth0, depth1 = map(get_depth, (node0, node1))
-    # Makes node0 as the deeper node in order to simplify the code.
-    if depth1 > depth0:
-        node0, node1 = node1, node0
 
-    # Ascends from the deeper node.
-    depth_diff = abs(depth0 - depth1)
-    while depth_diff:
-        node0 = node0.parent
-        depth_diff -= 1
 
-    # Now ascends both nodes until we reach the LCA.
-    while node0 is not node1:
-        node0, node1 = node0.parent, node1.parent
-    return node0
 
 
 @enable_executor_hook
