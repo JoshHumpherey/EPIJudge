@@ -1,22 +1,22 @@
 from test_framework import generic_test
 
 
-def inorder_traversal(tree):
+def inorder_traversal(root):
 
-    s, result = [], []
-
-    while s or tree:
-        if tree:
-            s.append(tree)
-            # Going left.
-            tree = tree.left
+    function_stack = []
+    result = []
+    while root or function_stack:
+        if root != None:
+            function_stack.append(root)
+            root = root.left # Go left
         else:
-            # Going up.
-            tree = s.pop()
-            result.append(tree.data)
-            # Going right.
-            tree = tree.right
+            parent = function_stack.pop()
+            val = parent.data
+            result.append(val)  # Inorder Node
+            root = parent.right   # Go Right
     return result
+
+
 
 
 if __name__ == '__main__':
