@@ -1,26 +1,34 @@
 import itertools
-
+import heapq
 from sorted_arrays_merge import merge_sorted_arrays
 from test_framework import generic_test
 
 
 def sort_k_increasing_decreasing_array(A):
+    min_heap = []
+    for element in A:
+        heapq.heappush(min_heap, element)
+    final = []
+    while min_heap:
+        final.append(heapq.heappop(min_heap))
+    return final
 
-    # Decomposes A into a set of sorted arrays.
-    sorted_subarrays = []
-    INCREASING, DECREASING = range(2)
-    subarray_type = INCREASING
-    start_idx = 0
-    for i in range(1, len(A) + 1):
-        if (i == len(A) or  # A is ended. Adds the last subarray.
-            (A[i - 1] < A[i] and subarray_type == DECREASING) or
-            (A[i - 1] >= A[i] and subarray_type == INCREASING)):
-            sorted_subarrays.append(A[start_idx:i] if subarray_type ==
-                                    INCREASING else A[i - 1:start_idx - 1:-1])
-            start_idx = i
-            subarray_type = (DECREASING
-                             if subarray_type == INCREASING else INCREASING)
-    return merge_sorted_arrays(sorted_subarrays)
+def optimized_inc_dec(A):
+    INC = []
+    DEC = []
+    if A[0] < A[1]:
+        INC.append(A[0])
+    else:
+        DEC.append(A[0])
+
+    for i in range(1, len(A)):
+        if A[i] > A[i-1]:
+            INC.append(A[i])
+        else:
+            DEC.append(A[i])
+    print(A)
+    print(INC)
+    print(DEC)
 
 
 # Pythonic solution, uses a stateful object to trace the monotonic subarrays.
@@ -42,6 +50,6 @@ def sort_k_increasing_decreasing_array_pythonic(A):
 
 if __name__ == '__main__':
     exit(
-        generic_test.generic_test_main("sort_increasing_decreasing_array.py",
+        generic_test.generic_test_main("sort_k_increasing_decreasing_array.py",
                                        'sort_increasing_decreasing_array.tsv',
                                        sort_k_increasing_decreasing_array))
