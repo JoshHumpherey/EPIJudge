@@ -28,21 +28,15 @@ class Star:
 
 
 def find_closest_k_stars(stars, k):
+    min_heap = []
+    for x in stars:
+        heapq.heappush(min_heap, x)
+    result = []
+    for i in range(k):
+        min_val = heapq.heappop(min_heap)
+        result.append(min_val)
+    return result
 
-    # max_heap to store the closest k stars seen so far.
-    max_heap = []
-    for star in stars:
-        # Add each star to the max-heap. If the max-heap size exceeds k, remove
-        # the maximum element from the max-heap.
-        # As python has only min-heap, insert tuple (negative of distance, star)
-        # to sort in reversed distance order.
-        heapq.heappush(max_heap, (-star.distance, star))
-        if len(max_heap) == k + 1:
-            heapq.heappop(max_heap)
-
-    # Iteratively extract from the max-heap, which yields the stars sorted
-    # according from furthest to closest.
-    return [s[1] for s in heapq.nlargest(k, max_heap)]
 
 
 def comp(expected_output, output):
