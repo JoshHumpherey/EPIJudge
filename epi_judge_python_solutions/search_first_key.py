@@ -3,9 +3,9 @@ import bisect
 from test_framework import generic_test
 
 
-def search_first_of_k(A, target):
-    for i in range(len(A)):
-        if A[i] == target:
+def search_first_of_k(arr, target):
+    for i in range(len(arr)):
+        if arr[i] == target:
             return i
     return -1
 
