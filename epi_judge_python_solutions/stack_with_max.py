@@ -1,19 +1,16 @@
 import collections
-
+import heapq
 from test_framework import generic_test
 from test_framework.test_failure import TestFailure
 
 
 class Stack:
 
-    class StackObj():
-        def __init__(self, order, data):
-            self.order = order
-            self.data = data
-
     def __init__(self):
         self.storage = []
         self.my_max = float('-inf')
+        self.heapmap = dict()
+        self.id_count = 100000000
 
     def empty(self):
         if len(self.storage) == 0:
@@ -28,22 +25,36 @@ class Stack:
             return Exception('Empty Stack has no max!')
 
     def pop(self):
-        fresh_val = heaqp.heappop(self.storage)
-        if fresh_val == my_max and len(self.storage) > 0:
-            self.my_max = heapq.heappop(self.storage).data
+        key = heapq.heappop(self.storage)
+        val = self.heapmap[key]
+        self.heapmap.pop(key, val)
+        if val == self.my_max:
+            self.my_max = self.find_map_max()
+        return val
+
+    def find_map_max(self):
+        best_max = float('-inf')
+        for key in self.heapmap:
+            if self.heapmap[key] > best_max:
+                best_max = self.heapmap[key]
+        return best_max
 
     def push(self, x):
         if x > self.my_max:
-            my_max.self = x
-        self.increase_time()
-        my_data = StackObj(0, x)
-        heapq.heappush(self.storage, my_data)
-
-    def increase_time():
-        for obj in self.storage:
-            obj.order += 1
+            self.my_max = x
+        key = self.id_count
+        self.heapmap[key] = x
+        heapq.heappush(self.storage, key)
+        #print(self.heapmap)
+        self.id_count -= 1
 
 
+
+
+my_stack = Stack()
+my_stack.push(1)
+my_stack.push(2)
+my_stack.push(3)
 
 def stack_tester(ops):
     try:
