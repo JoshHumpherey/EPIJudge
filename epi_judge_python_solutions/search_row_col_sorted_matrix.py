@@ -1,17 +1,17 @@
 from test_framework import generic_test
 
 
-def matrix_search(A, x):
+def matrix_search(arr, target):
 
-    row, col = 0, len(A[0]) - 1  # Start from the top-right corner.
+    row, col = 0, len(arr[0]) - 1
     # Keeps searching while there are unclassified rows and columns.
-    while row < len(A) and col >= 0:
-        if A[row][col] == x:
+    while row < len(arr) and col >= 0:
+        if arr[row][col] == target:
             return True
-        elif A[row][col] < x:
-            row += 1  # Eliminate this row.
-        else:  # A[row][col] > x.
-            col -= 1  # Eliminate this column.
+        elif arr[row][col] < target:
+            row += 1
+        else:
+            col -= 1
     return False
 
 
