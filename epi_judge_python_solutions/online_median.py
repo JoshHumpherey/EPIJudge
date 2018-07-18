@@ -3,26 +3,66 @@ import heapq
 from test_framework import generic_test
 
 
-def online_median(sequence):
+def online_median(arr):
+    min_heap = [] # stores greater/right half of the array
+    max_heap = [] # stores less/left half of the array
+    results = []
+    for num in arr:
+        if len(min_heap) == 0:
+            heapq.heappush(min_heap, num)
+        elif len(max_heap) == 0:
+            conv_num = (-1)*num
+            heapq.heappush(max_heap, conv_num)
+        else:
+            left_num = max_heap[0]*(-1)
+            right_num = min_heap[0]
+            if left_num > num:
+                conv_num = num*(-1)
+                heapq.heappush(max_heap, conv_num)
+            else:
+                heapq.heappush(min_heap, num)
+        max_heap, min_heap = balance_heaps(max_heap, min_heap)
+        temp = calculate_median(max_heap, min_heap)
+        results.append(temp)
+    return results
 
-    # min_heap stores the larger half seen so far.
-    min_heap = []
-    # max_heap stores the smaller half seen so far.
-    # values in max_heap are negative
-    max_heap = []
-    result = []
+def balance_heaps(max_heap, min_heap):
+    if len(max_heap) > 0 and len(min_heap) > 0:
+        if (len(max_heap) > len(min_heap)):
+            temp = heapq.heappop(max_heap)
+            temp *= (-1)
+            heapq.heappush(min_heap, temp)
+            if (max_heap[0]*(-1) > min_heap[0]):
+                left_val = heapq.heappop(max_heap)*(-1)
+                right_val = heapq.heappop(min_heap)
+                heapq.heappush(min_heap, left_val)
+                heapq.heappush(max_heap, right_val)
 
-    for x in sequence:
-        heapq.heappush(max_heap, -heapq.heappushpop(min_heap, x))
-        # Ensure min_heap and max_heap have equal number of elements if an even
-        # number of elements is read; otherwise, min_heap must have one more
-        # element than max_heap.
-        if len(max_heap) > len(min_heap):
-            heapq.heappush(min_heap, -heapq.heappop(max_heap))
+        elif len(min_heap) > len(max_heap):
+            temp = heapq.heappop(min_heap)
+            temp *= (-1)
+            heapq.heappush(max_heap, temp)
+            if (max_heap[0]*(-1) > min_heap[0]):
+                left_val = heapq.heappop(max_heap)*(-1)
+                right_val = heapq.heappop(min_heap)
+                heapq.heappush(min_heap, left_val)
+                heapq.heappush(max_heap, right_val)
+    return max_heap, min_heap
 
-        result.append(0.5 * (min_heap[0] + (-max_heap[0]))
-                      if len(min_heap) == len(max_heap) else min_heap[0])
-    return result
+def calculate_median(max_heap, min_heap):
+    #print("MAX: " + str(max_heap) + " MIN: " + str(min_heap))
+    if len(max_heap) > len(min_heap):
+        switch_num = max_heap[0]
+        num = (-1)*switch_num
+        return num
+    elif len(max_heap) < len(min_heap):
+        num = min_heap[0]
+        return num
+    else:
+        num1 = min_heap[0]
+        switch_num = max_heap[0]
+        num2 = (-1)*switch_num
+        return float((num1 + num2)/2)
 
 
 def online_median_wrapper(sequence):
