@@ -5,20 +5,23 @@ from test_framework.test_failure import TestFailure
 from test_framework.test_utils import enable_executor_hook
 
 
-def search_entry_equal_to_its_index(A):
+def search_entry_equal_to_its_index(arr):
+    print("Arr: " + str(arr))
+    result = binary_search(arr, 0, len(arr)-1)
+    return result
 
-    left, right = 0, len(A) - 1
-    while left <= right:
-        mid = (left + right) // 2
-        difference = A[mid] - mid
-        # A[mid] == mid if and only if difference == 0.
-        if difference == 0:
-            return mid
-        elif difference > 0:
-            right = mid - 1
-        else:  # difference < 0.
-            left = mid + 1
-    return -1
+def binary_search(arr, start, end):
+    print("Start: " + str(start) + " End: " + str(end))
+    if (end < start):
+        return -1
+    mid = (start + end) // 2
+    if arr[mid] > mid:
+        return binary_search(arr, start, mid-1)
+    elif arr[mid] < mid:
+        return binary_search(arr, mid+1, end)
+    else:
+        return mid
+
 
 
 @enable_executor_hook
