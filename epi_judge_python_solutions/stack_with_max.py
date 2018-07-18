@@ -6,39 +6,42 @@ from test_framework.test_failure import TestFailure
 
 class Stack:
 
-    ElementWithCachedMax = collections.namedtuple('storage',
-                                                  ('element', 'max'))
+    class StackObj():
+        def __init__(self, order, data):
+            self.order = order
+            self.data = data
 
     def __init__(self):
         self.storage = []
-        self.my_max = 0
+        self.my_max = float('-inf')
 
     def empty(self):
-        if self.storage == []:
+        if len(self.storage) == 0:
             return True
         else:
             return False
 
     def max(self):
-        result = self.my_max
-        return result
+        if self.empty != True:
+            return self.my_max
+        else:
+            return Exception('Empty Stack has no max!')
 
     def pop(self):
-        if self.empty() == True:
-            return None
-        else:
-            popped_val = self.storage.pop()
-            if popped_val == self.my_max:
-                if len(self.storage) == 0:
-                    self.my_max = 0
-                else:
-                    self.my_max = max(self.storage)
-            return popped_val
+        fresh_val = heaqp.heappop(self.storage)
+        if fresh_val == my_max and len(self.storage) > 0:
+            self.my_max = heapq.heappop(self.storage).data
 
     def push(self, x):
-        self.storage.append(x)
         if x > self.my_max:
-            self.my_max = x
+            my_max.self = x
+        self.increase_time()
+        my_data = StackObj(0, x)
+        heapq.heappush(self.storage, my_data)
+
+    def increase_time():
+        for obj in self.storage:
+            obj.order += 1
 
 
 
