@@ -2,16 +2,22 @@ from test_framework import generic_test
 
 
 def find_nearest_repetition(paragraph):
+    hashmap = dict()
+    word_list = list(paragraph)
+    shortest_distance = float('inf')
+    for i in range(len(word_list)):
+        key = word_list[i]
+        if key in hashmap:
+            temp_distance = abs(hashmap[key] - i)
+            if temp_distance < shortest_distance:
+                shortest_distance = temp_distance
+        hashmap[key] = i
+    if shortest_distance == float('inf'):
+        return -1
+    else:
+        return shortest_distance
 
-    word_to_latest_index, nearest_repeated_distance = {}, float('inf')
-    for i, word in enumerate(paragraph):
-        if word in word_to_latest_index:
-            latest_equal_word = word_to_latest_index[word]
-            nearest_repeated_distance = min(nearest_repeated_distance,
-                                            i - latest_equal_word)
-        word_to_latest_index[word] = i
-    return nearest_repeated_distance if nearest_repeated_distance != float(
-        'inf') else -1
+
 
 
 if __name__ == '__main__':
