@@ -1,39 +1,36 @@
 import collections
 import functools
-
+import collections
 from test_framework import generic_test
 from test_framework.test_utils import enable_executor_hook
 
-# Event is a tuple (start_time, end_time)
 Event = collections.namedtuple('Event', ('start', 'finish'))
-
-# Endpoint is a tuple (start_time, 0) or (end_time, 1) so that if times
-# are equal, start_time comes first
 Endpoint = collections.namedtuple('Endpoint', ('time', 'is_start'))
 
 
 def find_max_simultaneous_events(A):
-
-    # Builds an array of all endpoints.
-    E = [
-        p for event in A for p in (Endpoint(event.start, True),
-                                   Endpoint(event.finish, False))
-    ]
-    # Sorts the endpoint array according to the time, breaking ties by putting
-    # start times before end times.
-    E.sort(key=lambda e: (e.time, not e.is_start))
-
-    # Track the number of simultaneous events, record the maximum number of
-    # simultaneous events.
-    max_num_simultaneous_events, num_simultaneous_events = 0, 0
-    for e in E:
-        if e.is_start:
-            num_simultaneous_events += 1
-            max_num_simultaneous_events = max(num_simultaneous_events,
-                                              max_num_simultaneous_events)
+    print(A)
+    start_set = collections.defaultdict()
+    end_set = collections.defaultdict()
+    for event in A:
+        if event.start in start_set:
+            start_set[event.start] += 1
         else:
-            num_simultaneous_events -= 1
-    return max_num_simultaneous_events
+            start_set[event.start] = 1
+        if event.finish in end_set:
+            end_set[event.finish] += 1
+        else:
+            end_set[event.finish] = 1
+    results = []
+    current_count = 0
+    for i in range(0, 24):
+        if i in start_set:
+            current_count += start_set[i]
+        if i in end_set:
+            current_count -= end_set[i]
+        results.append(current_count)
+    print(results)
+    return max(results)
 
 
 @enable_executor_hook
