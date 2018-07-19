@@ -22,14 +22,19 @@ class Name:
 
 
 def eliminate_duplicate(A):
+    print("A: " + str(A))
+    name_set = set()
+    results = []
+    for i in range(len(A)):
+        test_val = A[i].first_name
+        print(test_val)
+        if test_val not in name_set:
+            results.append(test_val)
+            name_set.add(test_val)
+    print("SET: " + str(name_set))
+    print("RESULTS: " + str(results))
+    return results
 
-    A.sort()  # Makes identical elements become neighbors.
-    write_idx = 1
-    for cand in A[1:]:
-        if cand != A[write_idx - 1]:
-            A[write_idx] = cand
-            write_idx += 1
-    del A[write_idx:]
 
 
 def eliminate_duplicate_pythonic(A):
