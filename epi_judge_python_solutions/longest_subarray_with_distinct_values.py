@@ -1,23 +1,23 @@
 from test_framework import generic_test
 
 
-def longest_subarray_with_distinct_entries(A):
-
-    # Records the most recent occurrences of each entry.
-    most_recent_occurrence = {}
-    longest_dup_free_subarray_start_idx = result = 0
-    for i, a in enumerate(A):
-        # Defer updating dup_idx until we see a duplicate.
-        if a in most_recent_occurrence:
-            dup_idx = most_recent_occurrence[a]
-            # A[i] appeared before. Did it appear in the longest current
-            # subarray?
-            if dup_idx >= longest_dup_free_subarray_start_idx:
-                result = max(result, i - longest_dup_free_subarray_start_idx)
-                longest_dup_free_subarray_start_idx = dup_idx + 1
-        most_recent_occurrence[a] = i
-    return max(result, len(A) - longest_dup_free_subarray_start_idx)
-
+def longest_subarray_with_distinct_entries(arr):
+    if len(arr) < 1:
+        return 0
+    longest_count = 1
+    for i in range(len(arr)):
+        hash_set = set()
+        for j in range(i, len(arr)):
+            if arr[j] in hash_set:
+                if len(hash_set) > longest_count:
+                    longest_count = len(hash_set)
+                break
+            else:
+                hash_set.add(arr[j])
+                if j == len(arr)-1:
+                    if len(hash_set) > longest_count:
+                        longest_count = len(hash_set)
+    return longest_count
 
 if __name__ == '__main__':
     exit(

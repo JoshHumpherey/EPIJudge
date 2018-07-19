@@ -1,12 +1,18 @@
 from test_framework import generic_test
 
+def brute_square_root(k):
+    results = [0]
+    for i in range(k+1):
+        if i*i <= k:
+            results.append(i)
+        else:
+            break
+    return results[-1]
 
 def square_root(k):
-
-    left, right = 0, k
-    # Candidate interval [left, right] where everything before left has square
-    # <= k, everything after right has square > k.
-    while left <= right:
+    left = 0
+    right = k
+    while (left <= right):
         mid = (left + right) // 2
         mid_squared = mid * mid
         if mid_squared <= k:

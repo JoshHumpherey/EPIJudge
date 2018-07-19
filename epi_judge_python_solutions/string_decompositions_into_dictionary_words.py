@@ -4,25 +4,19 @@ from test_framework import generic_test
 
 
 def find_all_substrings(s, words):
-    def match_all_words_in_dict(start):
-        curr_string_to_freq = collections.Counter()
-        for i in range(start, start + len(words) * unit_size, unit_size):
-            curr_word = s[i:i + unit_size]
-            it = word_to_freq[curr_word]
-            if it == 0:
-                return False
-            curr_string_to_freq[curr_word] += 1
-            if curr_string_to_freq[curr_word] > it:
-                # curr_word occurs too many times for a match to be possible.
-                return False
-        return True
+    word_string = ''.join(words)
+    word_len = len(word_string)
+    for i in range(len(s)-word_len):
+        my_slice = s[i:(i+word_len)]
+        result = does_count_match(word_string, my_slice)
+        if result == True:
+            return [i, i+word_len]
+    return False
 
-    word_to_freq = collections.Counter(words)
-    unit_size = len(words[0])
-    return [
-        i for i in range(len(s) - unit_size * len(words) + 1)
-        if match_all_words_in_dict(i)
-    ]
+def does_count_match(string1, string2):
+    c1 = collections.Counter(string1)
+    c2 = collections.Counter(string2)
+    return c1 == c2
 
 
 if __name__ == '__main__':

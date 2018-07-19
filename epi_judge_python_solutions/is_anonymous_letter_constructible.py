@@ -4,10 +4,10 @@ from test_framework import generic_test
 
 
 def is_letter_constructible_from_magazine(letter_text, magazine_text):
-    EMPTY_COUNTER = collections.Counter()
-    letterc = collections.Counter(letter_text)
-    magazinec = collections.Counter(magazine_text)
-    if (letterc-magazinec) == EMPTY_COUNTER:
+    letter_collection = collections.Counter(letter_text)
+    magazine_collection = collections.Counter(magazine_text)
+
+    if (letter_collection-magazine_collection) == collections.Counter():
         return True
     else:
         return False

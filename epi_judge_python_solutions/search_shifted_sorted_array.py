@@ -1,18 +1,15 @@
 from test_framework import generic_test
 
 
-def search_smallest(A):
-
-    left, right = 0, len(A) - 1
+def search_smallest(arr):
+    left = 0
+    right = len(arr) - 1
     while left < right:
         mid = (left + right) // 2
-        if A[mid] > A[right]:
-            # Minimum must be in A[mid + 1:right + 1].
+        if arr[mid] > arr[right]:
             left = mid + 1
-        else:  # A[mid] < A[right].
-            # Minimum cannot be in A[mid + 1:right + 1] so it must be in A[left:mid + 1].
+        else:
             right = mid
-    # Loop ends when left == right.
     return left
 
 

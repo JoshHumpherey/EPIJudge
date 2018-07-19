@@ -4,10 +4,8 @@ from test_framework import generic_test
 
 
 def square_root(x):
-
     # Decides the search range according to x's value relative to 1.0.
     left, right = (x, 1.0) if x < 1.0 else (1.0, x)
-
     # Keeps searching as long as left != right.
     while not math.isclose(left, right):
         mid = 0.5 * (left + right)
@@ -18,8 +16,15 @@ def square_root(x):
             left = mid
     return left
 
+def my_square_root(x):
+    if x == 0:
+        return 0
+    else:
+        val = float(x**(0.5))
+        return val
+
 
 if __name__ == '__main__':
     exit(
         generic_test.generic_test_main("real_square_root.py",
-                                       'real_square_root.tsv', square_root))
+                                       'real_square_root.tsv', my_square_root))
