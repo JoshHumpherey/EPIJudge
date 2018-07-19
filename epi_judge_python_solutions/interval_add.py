@@ -7,27 +7,44 @@ from test_framework.test_utils import enable_executor_hook
 
 Interval = collections.namedtuple('Interval', ('left', 'right'))
 
+class obj:
+    def __init__(self, left, right):
+        self.left = left
+        self.right = right
 
 def add_interval(disjoint_intervals, new_interval):
+    intervals = []
+    x = obj(new_interval.left, new_interval.right)
+    x_inserted = False
+    for orig in disjoint_intervals:
+        pair = obj(orig.left, orig.right)
+        intervals.append(pair)
+    result = []
 
-    i, result = 0, []
+    for pair in intervals:
+        print("x.right: " + str(x.right + 1) + " and pair: " + str(pair.left) + "," + str(pair.right))
+        if pair.right < x.left: # no chance of union with X
+            result.append(pair)
+        elif pair.left > x.right: # no chance of union with X
+            result.append(pair)
+        elif pair.left <= x.left and x.left <= pair.right: # update x with new interval
+            x.left = pair.left
+            x_inserted = True
+        elif pair.left <= x.right and x.right <= pair.right: # update x with new interval
+            print("Inserting pair")
+            if x_inserted == True:
+                pop_val = result.pop()
+                pop_val.right = pair.right
+                result.append(pop_val)
+            else:
+                x.right = pair.right
+                result.append(x)
 
-    # Processes intervals in disjoint_intervals which come before new_interval.
-    while (i < len(disjoint_intervals)
-           and new_interval.left > disjoint_intervals[i].right):
-        result.append(disjoint_intervals[i])
-        i += 1
+    final = []
+    for pair in result:
+        final.append([pair.left, pair.right])
+    return final
 
-    # Processes intervals in disjoint_intervals which overlap with new_interval.
-    while (i < len(disjoint_intervals)
-           and new_interval.right >= disjoint_intervals[i].left):
-        # If [a, b] and [c, d] overlap, union is [min(a, c), max(b, d)].
-        new_interval = Interval(
-            min(new_interval.left, disjoint_intervals[i].left),
-            max(new_interval.right, disjoint_intervals[i].right))
-        i += 1
-    # Processes intervals in disjoint_intervals which come after new_interval.
-    return result + [new_interval] + disjoint_intervals[i:]
 
 
 @enable_executor_hook

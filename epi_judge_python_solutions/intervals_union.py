@@ -10,24 +10,9 @@ Interval = collections.namedtuple('Interval', ('left', 'right'))
 
 
 def union_of_intervals(intervals):
-
-    # Empty input.
-    if not intervals:
-        return []
-
-    # Sort intervals according to left endpoints of intervals.
-    intervals.sort(key=lambda i: (i.left.val, not i.left.is_closed))
-    result = [intervals[0]]
-    for i in intervals:
-        if intervals and (i.left.val < result[-1].right.val or
-                          (i.left.val == result[-1].right.val and
-                           (i.left.is_closed or result[-1].right.is_closed))):
-            if (i.right.val > result[-1].right.val or
-                (i.right.val == result[-1].right.val and i.right.is_closed)):
-                result[-1] = Interval(result[-1].left, i.right)
-        else:
-            result.append(i)
-    return result
+    my_range =
+    for set in intervals:
+        print(set.left.val)
 
 
 @enable_executor_hook
