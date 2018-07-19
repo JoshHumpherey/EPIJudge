@@ -1,37 +1,45 @@
 import collections
 import functools
-
+import collections
 from test_framework import generic_test
 from test_framework.test_failure import TestFailure
 from test_framework.test_utils import enable_executor_hook
 
-Subarray = collections.namedtuple('Subarray', ('start', 'end'))
-
-
 def find_smallest_subarray_covering_set(paragraph, keywords):
-
-    keywords_to_cover = collections.Counter(keywords)
-    result = Subarray(-1, -1)
-    remaining_to_cover = len(keywords)
-    left = 0
-    for right, p in enumerate(paragraph):
-        if p in keywords:
-            keywords_to_cover[p] -= 1
-            if keywords_to_cover[p] >= 0:
-                remaining_to_cover -= 1
-
-        # Keeps advancing left until keywords_to_cover does not contain all
-        # keywords.
-        while remaining_to_cover == 0:
-            if result == (-1, -1) or right - left < result[1] - result[0]:
-                result = (left, right)
-            pl = paragraph[left]
-            if pl in keywords:
-                keywords_to_cover[pl] += 1
-                if keywords_to_cover[pl] > 0:
-                    remaining_to_cover += 1
-            left += 1
-    return result
+    if len(keywords) == len(paragraph):
+        print("Returning p_low of: " + str(len(keywords)-1) + " with pair: " + str([0, len(keywords)-1]))
+        return [0, len(keywords)-1]
+    elif set(keywords) - set(paragraph) != set():
+        return [0,0]
+    hashmap = set()
+    pairs = []
+    for word in keywords:
+        hashmap.add(word)
+    keyword_amt = len(keywords)-1
+    for slice_len in range(keyword_amt, len(paragraph)):
+        for i in range(len(paragraph) - slice_len):
+            current_slice = paragraph[i:(i+slice_len)]
+            temp_set = set()
+            for word in current_slice:
+                temp_set.add(word)
+            if hashmap - temp_set == set():
+                pairs.append([i,i+slice_len])
+    pair_diff = lambda x: abs(x[1]-x[0])
+    min_diff = float('inf')
+    min_pair = None
+    if pairs == []:
+        return [0,0]
+    print(pairs)
+    for p in pairs:
+        p_low = pair_diff(p)
+        print("Pair: " + str(p) + " has p_low of " + str(p_low))
+        if p_low <= min_diff:
+            min_diff = p_low
+            min_pair = p
+            if min_pair:
+                min_pair[1] -= 1
+    print("Returning p_low of: " + str(min_diff) + " with pair: " + str(min_pair))
+    return min_pair
 
 
 @enable_executor_hook
