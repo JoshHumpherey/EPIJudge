@@ -1,29 +1,51 @@
-import bintrees
-
 from test_framework import generic_test
 
 
 def find_closest_elements_in_sorted_arrays(sorted_arrays):
+    target_len = len(sorted_arrays)
+    master_array = []
+    mapping = dict()
+    min_val = float('inf')
+    max_val = float('-inf')
+    index = 0
+    for array in sorted_arrays:
+        for key in array:
+            if key > max_val:
+                max_val = key
+            if key < min_val:
+                min_val = key
+            mapping[key] = index
+            master_array.append(key)
+        index += 1
+    sorted_master = sorted(master_array)
+    pairs = []
+    for i in range(len(sorted_master)):
+        temp_pair = []
+        temp_set = set()
+        for j in range(i, len(sorted_master)):
+            key = sorted_master[j]
+            val = mapping[key]
+            if val not in temp_set:
+                temp_set.add(val)
+                temp_pair.append(key)
+            if len(temp_pair) == target_len:
+                pairs.append(temp_pair)
+                break
 
-    min_distance_so_far = float('inf')
-    # Stores array iterators in each entry.
-    iters = bintrees.RBTree()
-    for idx, sorted_array in enumerate(sorted_arrays):
-        it = iter(sorted_array)
-        first_min = next(it, None)
-        if first_min is not None:
-            iters.insert((first_min, idx), it)
+    lowest_diff = float('inf')
+    lowest_pair = None
+    pair_diff = lambda diff: (abs(max(pair) - min(pair)))
+    for pair in pairs:
+        res = pair_diff(pair)
+        print("Pair Diff: " + str(res))
+        if res < lowest_diff:
+            lowest_diff = res
+            lowest_pair = pair
+    return lowest_diff
 
-    while True:
-        min_value, min_idx = iters.min_key()
-        max_value = iters.max_key()[0]
-        min_distance_so_far = min(max_value - min_value, min_distance_so_far)
-        it = iters.pop_min()[1]
-        next_min = next(it, None)
-        # Return if some array has no remaining elements.
-        if next_min is None:
-            return min_distance_so_far
-        iters.insert((next_min, min_idx), it)
+
+
+
 
 
 if __name__ == '__main__':
