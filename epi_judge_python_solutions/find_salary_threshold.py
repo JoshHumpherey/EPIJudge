@@ -1,22 +1,33 @@
 from test_framework import generic_test
 
 
-def find_salary_cap(target_payroll, current_salaries):
-
+def find_salary_cap_brute(target_payroll, current_salaries):
     current_salaries.sort()
-    unadjusted_salary_sum = 0.0
-    for i, current_salary in enumerate(current_salaries):
-        adjusted_people = len(current_salaries) - i
-        adjusted_salary_sum = current_salary * adjusted_people
-        if unadjusted_salary_sum + adjusted_salary_sum >= target_payroll:
-            return (target_payroll - unadjusted_salary_sum) / adjusted_people
-        unadjusted_salary_sum += current_salary
-    # No solution, since target_payroll > existing payroll.
-    return -1.0
+    if sum(current_salaries) == target_payroll:
+        return current_salaries[-1]
+    if sum(current_salaries) < target_payroll:
+        return -1
+    print("Current: " + str(target_payroll) + ", Sum: " + str(sum(current_salaries)) + ", Target: " + str(target_payroll))
+    current_cap = 1
+    while(current_cap <= target_payroll):
+        temp_salaries = []
+        for val in current_salaries:
+            if val > current_cap:
+                temp_salaries.append(current_cap)
+            else:
+                temp_salaries.append(val)
+        print(sum(temp_salaries))
+        if sum(temp_salaries) >= target_payroll:
+            return current_cap
+        else:
+            current_cap += 1
+            #print("Bumping up current cap to: " + str(current_cap))
+    return current_cap
+
 
 
 if __name__ == '__main__':
     exit(
         generic_test.generic_test_main("find_salary_threshold.py",
                                        'find_salary_threshold.tsv',
-                                       find_salary_cap))
+                                       find_salary_cap_brute))
