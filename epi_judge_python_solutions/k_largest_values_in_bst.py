@@ -1,18 +1,18 @@
 from test_framework import generic_test, test_utils
 
 
-def find_k_largest_in_bst(tree, k):
-    def find_k_largest_in_bst_helper(tree):
-        # Perform reverse inorder traversal.
-        if tree and len(k_largest_elements) < k:
-            find_k_largest_in_bst_helper(tree.right)
-            if len(k_largest_elements) < k:
-                k_largest_elements.append(tree.data)
-                find_k_largest_in_bst_helper(tree.left)
-
-    k_largest_elements = []
-    find_k_largest_in_bst_helper(tree)
-    return k_largest_elements
+def find_k_largest_in_bst(root, k):
+    node_list = []
+    def pre_order(root):
+        if root == None:
+            return
+        else:
+            node_list.append(root.data)
+            pre_order(root.left)
+            pre_order(root.right)
+    pre_order(root)
+    sorted_data = sorted(node_list)
+    return sorted_data[(len(sorted_data)-k):]
 
 
 if __name__ == '__main__':
