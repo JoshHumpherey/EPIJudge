@@ -1,19 +1,19 @@
 from test_framework import generic_test
 
 
-def find_first_greater_than_k(tree, k):
-
-    subtree, first_so_far = tree, None
+def find_first_greater_than_k(root, k):
+    subtree = root
+    first_so_far = None
     while subtree:
         if subtree.data > k:
-            first_so_far, subtree = subtree, subtree.left
-        else:  # Root and all keys in left subtree are <= k, so skip them.
+            first_so_far = subtree
+            subtree = subtree.left
+        else:
             subtree = subtree.right
     return first_so_far
 
-
-def find_first_greater_than_k_wrapper(tree, k):
-    result = find_first_greater_than_k(tree, k)
+def find_first_greater_than_k_wrapper(root, k):
+    result = find_first_greater_than_k(root, k)
     return result.data if result else -1
 
 
