@@ -23,23 +23,25 @@ def add_interval(disjoint_intervals, new_interval):
 
     for pair in intervals:
         print("x.right: " + str(x.right + 1) + " and pair: " + str(pair.left) + "," + str(pair.right))
-        if pair.right < x.left: # no chance of union with X
-            result.append(pair)
-        elif pair.left > x.right: # no chance of union with X
-            result.append(pair)
-        elif pair.left <= x.left and x.left <= pair.right: # update x with new interval
-            x.left = pair.left
-            x_inserted = True
-        elif pair.left <= x.right and x.right <= pair.right: # update x with new interval
-            print("Inserting pair")
-            if x_inserted == True:
-                pop_val = result.pop()
-                pop_val.right = pair.right
-                result.append(pop_val)
-            else:
-                x.right = pair.right
+        if pair.left + 1 <= x.right and x.right + 1 <= pair.right:
+            x.right = pair.right
+            result.append(x)
+        elif pair.left + 1 <= x.left and x.left + 1 <= pair.right:
+            if x_inserted == False:
+                x_inserted = True
+                x.left = pair.left
                 result.append(x)
+            else:
+                pop_pair = result.pop()
+                pop_pair.right = pair.right
+                result.append(pop_pair)
 
+        elif x.right + 1 < pair.left:
+            result.append(pair)
+        elif pair.right + 1 < x.left:
+            result.append(pair)
+        else:
+            result.append(pair)
     final = []
     for pair in result:
         final.append([pair.left, pair.right])
