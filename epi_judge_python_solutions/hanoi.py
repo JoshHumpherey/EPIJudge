@@ -6,23 +6,20 @@ from test_framework.test_utils import enable_executor_hook
 
 NUM_PEGS = 3
 
+def solve_tower(num_rings):
+    result = []
+    def compute_steps(rings_to_move, FROM, TO, USE):
+        if rings_to_move > 0:
+            compute_steps(rings_to_move-1, FROM, USE, TO)
+            pop_val = pegs[FROM].pop()
+            pegs[TO].append(pop_val)
+            result.append([FROM, TO])
+            compute_steps(rings_to_move-1, USE, TO, FROM)
 
-def compute_tower_hanoi(num_rings):
-    def compute_tower_hanoi_steps(num_rings_to_move, from_peg, to_peg,
-                                  use_peg):
-        if num_rings_to_move > 0:
-            compute_tower_hanoi_steps(num_rings_to_move - 1, from_peg, use_peg,
-                                      to_peg)
-            pegs[to_peg].append(pegs[from_peg].pop())
-            result.append([from_peg, to_peg])
-            compute_tower_hanoi_steps(num_rings_to_move - 1, use_peg, to_peg,
-                                      from_peg)
 
     # Initialize pegs.
-    result = []
-    pegs = [list(reversed(range(1, num_rings + 1)))] + [[] for _ in range(
-        1, NUM_PEGS)]
-    compute_tower_hanoi_steps(num_rings, 0, 1, 2)
+    pegs = [list(reversed(range(1, num_rings + 1)))] + [[] for _ in range(1, NUM_PEGS)]
+    compute_steps(num_rings, 0, 1, 2)
     return result
 
 
@@ -31,7 +28,7 @@ def compute_tower_hanoi_wrapper(executor, num_rings):
     pegs = [list(reversed(range(1, num_rings + 1)))] + [[] for _ in range(
         1, NUM_PEGS)]
 
-    result = executor.run(functools.partial(compute_tower_hanoi, num_rings))
+    result = executor.run(functools.partial(solve_tower, num_rings))
 
     for from_peg, to_peg in result:
         if pegs[to_peg] and pegs[from_peg][-1] >= pegs[to_peg][-1]:
