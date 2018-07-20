@@ -5,43 +5,28 @@ from test_framework.binary_tree_utils import must_find_node
 from test_framework.test_utils import enable_executor_hook
 
 
-def pair_includes_ancestor_and_descendant_of_m(possible_anc_or_desc_0,
-                                               possible_anc_or_desc_1, middle):
-
-    search_0, search_1 = possible_anc_or_desc_0, possible_anc_or_desc_1
-
-    # Perform interleaved searching from possible_anc_or_desc_0 and
-    # possible_anc_or_desc_1 for middle.
-    while (search_0 is not possible_anc_or_desc_1 and search_0 is not middle
-           and search_1 is not possible_anc_or_desc_0
-           and search_1 is not middle and (search_0 or search_1)):
-        if search_0:
-            search_0 = (search_0.left
-                        if search_0.data > middle.data else search_0.right)
-        if search_1:
-            search_1 = (search_1.left
-                        if search_1.data > middle.data else search_1.right)
-
-    # If both searches were unsuccessful, or we got from
-    # possible_anc_or_desc_0 to possible_anc_or_desc_1 without seeing middle,
-    # or from possible_anc_or_desc_1 to possible_anc_or_desc_0 without seeing
-    # middle, middle cannot lie between possible_anc_or_desc_0 and
-    # possible_anc_or_desc_1.
-    if ((search_0 is not middle and search_1 is not middle)
-            or search_0 is possible_anc_or_desc_1
-            or search_1 is possible_anc_or_desc_0):
+def pair_includes_ancestor_and_descendant_of_m(N1, N2, mid_node):
+    if N1 == N2:
+        return False
+    n1_ancestor = dfs(N1, mid_node)
+    n2_ancestor = dfs(N2, mid_node)
+    if n1_ancestor and not n2_ancestor:
+        n2_child = dfs(mid_node, N2)
+        return n2_child
+    elif n2_ancestor and not n1_ancestor:
+        n1_child = dfs(mid_node, N1)
+        return n1_child
+    else:
         return False
 
-    def search_target(source, target):
-        while source and source is not target:
-            source = source.left if source.data > target.data else source.right
-        return source is target
-
-    # If we get here, we already know one of possible_anc_or_desc_0 or
-    # possible_anc_or_desc_1 has a path to middle. Check if middle has a path
-    # to possible_anc_or_desc_1 or to possible_anc_or_desc_0.
-    return search_target(middle, possible_anc_or_desc_1
-                         if search_0 is middle else possible_anc_or_desc_0)
+def dfs(root, target):
+    if root == None:
+        return False
+    if root == target:
+        return True
+    left = dfs(root.left, target)
+    right = dfs(root.right, target)
+    return left or right
 
 
 @enable_executor_hook
