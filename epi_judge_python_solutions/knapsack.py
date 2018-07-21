@@ -6,30 +6,37 @@ from test_framework.test_utils import enable_executor_hook
 
 Item = collections.namedtuple('Item', ('weight', 'value'))
 
+class clock:
+    def __init__(self, value, weight):
+        self.value = value
+        self.weight = weight
+
+def knapsack(capacity, weights, values, n):
+    if n == 0 or capacity == 0:
+        return 0
+    if capacity < weights[n-1]: # Weight exceeds capacity.. must skip
+        return knapsack(capacity, weights, values, n-1)
+    else:
+        current_value = values[n-1]
+        current_weight = weights[n-1]
+        p1 = knapsack(capacity - current_weight , weights, values, n-1) + current_value
+        p2 = knapsack(capacity, weights, values, n-1)
+        #print("P1: " + str(p1) + ", P2: " + str(p2))
+        return max(p1, p2)
 
 def optimum_subject_to_capacity(items, capacity):
-
-    # Returns the optimum value when we choose from items[:k + 1] and have a
-    # capacity of available_capacity.
-    def optimum_subject_to_item_and_capacity(k, available_capacity):
-        if k < 0:
-            # No items can be chosen.
-            return 0
-
-        if V[k][available_capacity] == -1:
-            without_curr_item = optimum_subject_to_item_and_capacity(
-                k - 1, available_capacity)
-            with_curr_item = (0 if available_capacity < items[k].weight else (
-                items[k].value + optimum_subject_to_item_and_capacity(
-                    k - 1, available_capacity - items[k].weight)))
-            V[k][available_capacity] = max(without_curr_item, with_curr_item)
-        return V[k][available_capacity]
-
-    # V[i][j] holds the optimum value when we choose from items[:i + 1] and have
-    # a capacity of j.
-    V = [[-1] * (capacity + 1) for _ in items]
-    return optimum_subject_to_item_and_capacity(len(items) - 1, capacity)
-
+    all_clocks = []
+    for x in items:
+        my_clock = clock(x[1], x[0])
+        all_clocks.append(my_clock)
+    sorted_clocks = sorted(all_clocks, key=lambda x: x.value)
+    sorted_weights = []
+    sorted_vals = []
+    for x in sorted_clocks:
+        sorted_weights.append(x.weight)
+        sorted_vals.append(x.value)
+    result = knapsack(capacity, sorted_weights, sorted_vals, len(items))
+    return result
 
 @enable_executor_hook
 def optimum_subject_to_capacity_wrapper(executor, items, capacity):
@@ -37,8 +44,5 @@ def optimum_subject_to_capacity_wrapper(executor, items, capacity):
     return executor.run(
         functools.partial(optimum_subject_to_capacity, items, capacity))
 
-
 if __name__ == '__main__':
-    exit(
-        generic_test.generic_test_main("knapsack.py", "knapsack.tsv",
-                                       optimum_subject_to_capacity_wrapper))
+    exit(generic_test.generic_test_main("knapsack.py", "knapsack.tsv",optimum_subject_to_capacity_wrapper))
