@@ -2,31 +2,38 @@ from test_framework import generic_test
 
 
 def is_pattern_contained_in_grid(grid, S):
-    def is_pattern_suffix_contained_starting_at_xy(x, y, offset):
-        if len(S) == offset:
-            # Nothing left to complete.
-            return True
+    print_grid(grid)
+    for r in range(len(grid)):
+        for c in range(len(grid[0])):
+            if grid[r][c] == S[0]:
+                #print("DFS on: " + str([r,c]))
+                result = dfs(grid, 0, r, c, S)
+                #print("Result: " + str(result))
+                if result == True:
+                    return True
+    return False
 
-        # Check if (x, y) lies outside the grid.
-        if (0 <= x < len(grid) and 0 <= y < len(grid[x])
-                and grid[x][y] == S[offset]
-                and (x, y, offset) not in previous_attempts and any(
-                    is_pattern_suffix_contained_starting_at_xy(
-                        x + a, y + b, offset + 1)
-                    for a, b in ((-1, 0), (1, 0), (0, -1), (0, 1)))):
-            return True
-        previous_attempts.add((x, y, offset))
+def dfs(grid, index, r, c, S):
+    #print("Checking " + str([r,c]) + " with a value of: " + str(grid[r][c]) + " ---- Expecting: " + str(S[index]))
+    if r < 0 or c < 0 or r >= len(grid) or c >= len(grid[0]):
+        return False
+    elif S[index] == grid[r][c] and len(S) -1 == index:
+        return True
+    elif S[index] == grid[r][c]:
+        #print("For " + str(S[index]) + " we found TRUE")
+        res1 = dfs(grid, index + 1, r+1, c, S)
+        res2 = dfs(grid, index + 1, r-1, c, S)
+        res3 = dfs(grid, index + 1, r, c+1, S)
+        res4 = dfs(grid, index + 1, r, c-1, S)
+        return (res1 or res2 or res3 or res4)
+    else:
         return False
 
-    # Each entry in previous_attempts is a point in the grid and suffix of
-    # pattern (identified by its offset). Presence in previous_attempts
-    # indicates the suffix is not contained in the grid starting from that
-    # point.
-    previous_attempts = set()
-    return any(
-        is_pattern_suffix_contained_starting_at_xy(i, j, 0)
-        for i in range(len(grid)) for j in range(len(grid[i])))
-
+def print_grid(grid):
+    print("Grid: " )
+    for r in range(len(grid)):
+        print(grid[r])
+    print()
 
 if __name__ == '__main__':
     exit(

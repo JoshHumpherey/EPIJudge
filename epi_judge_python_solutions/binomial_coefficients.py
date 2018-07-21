@@ -17,7 +17,4 @@ def compute_binomial_coefficients_space_efficient(n, k):
     return table[-1]
 
 if __name__ == '__main__':
-    exit(
-        generic_test.generic_test_main("binomial_coefficients.py",
-                                       'binomial_coefficients.tsv',
-                                       compute_binomial_coefficient))
+    exit(generic_test.generic_test_main("binomial_coefficients.py",'binomial_coefficients.tsv', compute_binomial_coefficient))
