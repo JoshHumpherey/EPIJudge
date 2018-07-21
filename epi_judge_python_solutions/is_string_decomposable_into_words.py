@@ -6,37 +6,20 @@ from test_framework.test_utils import enable_executor_hook
 
 
 def decompose_into_dictionary_words(domain, dictionary):
-
-    # When the algorithm finishes, last_length[i] != -1 indicates domain[:i +
-    # 1] has a valid decomposition, and the length of the last string in the
-    # decomposition is last_length[i].
-    last_length = [-1] * len(domain)
+    result = []
+    last_index = 0
     for i in range(len(domain)):
-        # If domain[:i + 1] is a dictionary word, set last_length[i] to the
-        # length of that word.
-        if domain[:i + 1] in dictionary:
-            last_length[i] = i + 1
-            continue
+        slice = domain[last_index:i]
+        print("Slice " + str([last_index,i]) + ": " + str(slice))
+        if slice in dictionary:
+            result.append(slice)
+            last_index = i+1
+            dictionary.remove(slice)
+        elif len(domain)-1 == i:
+            return False
+    return result
 
-        # If domain[:i + 1] is not a dictionary word, we look for j < i such
-        # that domain[: j + 1] has a valid decomposition and domain[j + 1:i + 1]
-        # is a dictionary word. If so, record the length of that word in
-        # last_length[i].
-        for j in range(i):
-            if last_length[j] != -1 and domain[j + 1:i + 1] in dictionary:
-                last_length[i] = i - j
-                break
-
-    decompositions = []
-    if last_length[-1] != -1:
-        # domain can be assembled by dictionary words.
-        idx = len(domain) - 1
-        while idx >= 0:
-            decompositions.append(domain[idx + 1 - last_length[idx]:idx + 1])
-            idx -= last_length[idx]
-        decompositions = decompositions[::-1]
-    return decompositions
-
+print(decompose_into_dictionary_words('ja', ["a", "j"]))
 
 @enable_executor_hook
 def decompose_into_dictionary_words_wrapper(executor, domain, dictionary,
