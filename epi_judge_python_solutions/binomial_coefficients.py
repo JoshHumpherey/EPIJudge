@@ -1,19 +1,10 @@
 from test_framework import generic_test
-
+from math import factorial
 
 def compute_binomial_coefficient(n, k):
-    def compute_x_choose_y(x, y):
-        if y in (0, x):
-            return 1
-
-        if x_choose_y[x][y] == 0:
-            without_y = compute_x_choose_y(x - 1, y)
-            with_y = compute_x_choose_y(x - 1, y - 1)
-            x_choose_y[x][y] = without_y + with_y
-        return x_choose_y[x][y]
-
-    x_choose_y = [[0] * (k + 1) for _ in range(n + 1)]
-    return compute_x_choose_y(n, k)
+    # (n!)/(r!(n-r)!)
+    result = factorial(n)/(factorial(k)*(factorial(n-k)))
+    return int(result)
 
 
 def compute_binomial_coefficients_space_efficient(n, k):
@@ -24,7 +15,6 @@ def compute_binomial_coefficients_space_efficient(n, k):
         for j in reversed(range(1, min(i, k) + 1)):
             table[j] = table[j] + table[j - 1]
     return table[-1]
-
 
 if __name__ == '__main__':
     exit(
