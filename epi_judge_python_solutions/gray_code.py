@@ -6,7 +6,6 @@ from test_framework.test_utils import enable_executor_hook
 
 
 def gray_code(num_bits):
-
     if num_bits == 0:
         return [0]
 
