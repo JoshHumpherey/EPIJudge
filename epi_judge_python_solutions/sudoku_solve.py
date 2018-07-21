@@ -6,55 +6,93 @@ import math
 from test_framework import generic_test
 from test_framework.test_failure import TestFailure
 from test_framework.test_utils import enable_executor_hook
+EMPTY = 0
+VALID = {1:1, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1, 9:1}
 
+def solve_sudoku(board):
+    guesses = [1,2,3,4,5,6,7,8,9]
+    print_board(board)
+    all_valid = False
 
-def solve_sudoku(partial_assignment):
-    def solve_partial_sudoku(i, j):
-        if i == len(partial_assignment):
-            i = 0  # Starts a row.
-            j += 1
-            if j == len(partial_assignment[i]):
-                return True  # Entire matrix has been filled without conflict.
+    for r in range(len(board)):
+        for c in range(len(board[0])):
+            val = board[r][c]
+            if val == 0:
+                for num in guesses:
+                    board[r][c] = num
+                    row = valid_row(board, r)
+                    col = valid_column(board, c)
+                    square = valid_square(board, r, c)
+                    if row == True and col == True:
+                        print("VALID")
+                        break
+                    elif (num == 9) and (row == False or col == False):
+                        board[r][c] = 0
+                        print(str([r,c]) + " is now: " + str(board[r][c]))
 
-        # Skips nonempty entries.
-        if partial_assignment[i][j] != EMPTY_ENTRY:
-            return solve_partial_sudoku(i + 1, j)
+    print("END RESULT: " )
+    print_board(board)
+    return
 
-        def valid_to_add(i, j, val):
-            # Check row constraints.
-            if any(val == partial_assignment[k][j]
-                   for k in range(len(partial_assignment))):
+def valid_row(board, r):
+    actual = set()
+    for c in range(len(board)):
+        val = board[r][c]
+        if val != 0 and val not in actual:
+            actual.add(val)
+        elif val != 0 and val in actual:
+            return False
+    return True
+
+def valid_column(board, c):
+    actual = set()
+    for r in range(len(board[0])):
+        val = board[r][c]
+        if val != 0 and val not in actual:
+            actual.add(val)
+        elif val != 0 and val in actual:
+            return False
+    return True
+
+def valid_square(board, r, c):
+    if c <= 2:
+        if r <= 2:
+            return check_square(board, 0, 0)
+        elif r > 2 and r <= 5:
+            return check_square(board, 3, 0)
+        else:
+            return check_square(board, 6, 0)
+    elif c > 2 and c <= 5:
+        if r <= 2:
+            return check_square(board, 0, 3)
+        elif r > 2 and r <= 5:
+            return check_square(board, 3, 3)
+        else:
+            return check_square(board, 6, 3)
+    else:
+        if r <= 2:
+            return check_square(board, 0, 6)
+        elif r > 2 and r <= 5:
+            return check_square(board, 3, 6)
+        else:
+            return check_square(board, 6, 6)
+
+def check_square(board, r, c):
+    actual = set()
+    for i in range(r, r + 3):
+        for j in range(c, c+3):
+            val = board[i][j]
+            if val != 0 and val not in actual:
+                actual.add(val)
+            elif val != 0 and val in actual:
                 return False
+    return True
 
-            # Check column constraints.
-            if val in partial_assignment[i]:
-                return False
-
-            # Check region constraints.
-            region_size = int(math.sqrt(len(partial_assignment)))
-            I = i // region_size
-            J = j // region_size
-            return not any(
-                val == partial_assignment[region_size * I + a][region_size * J
-                                                               + b]
-                for a, b in itertools.product(range(region_size), repeat=2))
-
-        for val in range(1, len(partial_assignment) + 1):
-            # It's substantially quicker to check if entry val with any of the
-            # constraints if we add it at (i,j) adding it, rather than adding it and
-            # then checking all constraints. The reason is that we know we are
-            # starting with a valid configuration, and the only entry which can
-            # cause a problem is entry val at (i,j).
-            if valid_to_add(i, j, val):
-                partial_assignment[i][j] = val
-                if solve_partial_sudoku(i + 1, j):
-                    return True
-        partial_assignment[i][j] = EMPTY_ENTRY  # Undo assignment.
-        return False
-
-    EMPTY_ENTRY = 0
-    return solve_partial_sudoku(0, 0)
-
+def print_board(board):
+    print("Sudoku Matrix:  ")
+    for r in range(len(board)):
+        print(board[r])
+    print()
 
 def assert_unique_seq(seq):
     seen = set()
@@ -67,7 +105,6 @@ def assert_unique_seq(seq):
             raise TestFailure('Duplicate value in section')
         seen.add(x)
 
-
 def gather_square_block(data, block_size, n):
     block_x = (n % block_size) * block_size
     block_y = (n // block_size) * block_size
@@ -76,7 +113,6 @@ def gather_square_block(data, block_size, n):
         data[block_x + i][block_y + j] for j in range(block_size)
         for i in range(block_size)
     ]
-
 
 @enable_executor_hook
 def solve_sudoku_wrapper(executor, partial_assignment):
@@ -101,8 +137,18 @@ def solve_sudoku_wrapper(executor, partial_assignment):
         assert_unique_seq([row[i] for row in solved])
         assert_unique_seq(gather_square_block(solved, block_size, i))
 
+TEST = [[0, 3, 2, 0, 0, 0, 8, 0, 4],
+        [8, 0, 0, 2, 0, 0, 0, 7, 0],
+        [0, 1, 7, 0, 0, 5, 9, 0, 6],
+        [5, 8, 0, 0, 2, 0, 0, 3, 0],
+        [0, 0, 6, 0, 4, 0, 7, 0, 0],
+        [0, 0, 4, 9, 1, 3, 0, 6, 0],
+        [0, 0, 0, 7, 3, 0, 2, 0, 0],
+        [0, 5, 9, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 8, 0, 9, 0, 0, 0]]
+
+#solve_sudoku(TEST)
+
 
 if __name__ == '__main__':
-    exit(
-        generic_test.generic_test_main("sudoku_solve.py", 'sudoku_solve.tsv',
-                                       solve_sudoku_wrapper))
+    exit(generic_test.generic_test_main("sudoku_solve.py", 'sudoku_solve.tsv', solve_sudoku_wrapper))
