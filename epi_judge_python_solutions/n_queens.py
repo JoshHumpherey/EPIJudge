@@ -10,9 +10,7 @@ def n_queens(n):
         for col in range(n):
             # Test if a newly placed queen will conflict any earlier queens
             # placed before.
-            if all(
-                    abs(c - col) not in (0, row - i)
-                    for i, c in enumerate(col_placement[:row])):
+            if all(abs(c - col) not in (0, row - i) for i, c in enumerate(col_placement[:row])):
                 col_placement[row] = col
                 solve_n_queens(row + 1)
 

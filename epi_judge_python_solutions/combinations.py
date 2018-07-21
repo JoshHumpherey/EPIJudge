@@ -1,22 +1,13 @@
 from test_framework import generic_test, test_utils
-
+import itertools
 
 def combinations(n, k):
-    def directed_combinations(offset, partial_combination):
-        if len(partial_combination) == k:
-            result.append(list(partial_combination))
-            return
+    orig_list = []
+    for i in range(1, n+1):
+        orig_list.append(i)
 
-        # Generate remaining combinations over {offset, ..., n - 1} of size
-        # num_remaining.
-        num_remaining = k - len(partial_combination)
-        i = offset
-        while i <= n and num_remaining <= n - i + 1:
-            directed_combinations(i + 1, partial_combination + [i])
-            i += 1
-
-    result = []
-    directed_combinations(1, [])
+    result = list(itertools.permutations(orig_list, k))
+    print(result)
     return result
 
 
