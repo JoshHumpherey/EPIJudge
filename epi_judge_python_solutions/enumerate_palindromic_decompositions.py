@@ -2,19 +2,21 @@ from test_framework import generic_test
 
 
 def palindrome_decompositions(input):
-    def directed_palindrome_decompositions(offset, partial_partition):
-        if offset == len(input):
+    result = []
+    def gen_decomp(index, partial_partition):
+        if index == len(input):
             result.append(list(partial_partition))
             return
 
-        for i in range(offset + 1, len(input) + 1):
-            prefix = input[offset:i]
-            if prefix == prefix[::-1]:
-                directed_palindrome_decompositions(
-                    i, partial_partition + [prefix])
+        for i in range(index + 1, len(input) + 1):
+            prefix = input[index:i]
+            print("Prefix: " + str(prefix))
+            if prefix == prefix[::-1]: # reverses list
+                gen_decomp(i, partial_partition + [prefix])
 
-    result = []
-    directed_palindrome_decompositions(0, [])
+
+    gen_decomp(0, [])
+    print(result)
     return result
 
 
