@@ -16,7 +16,6 @@ def solve_tower(num_rings):
             result.append([FROM, TO])
             compute_steps(rings_to_move-1, USE, TO, FROM)
 
-
     # Initialize pegs.
     pegs = [list(reversed(range(1, num_rings + 1)))] + [[] for _ in range(1, NUM_PEGS)]
     compute_steps(num_rings, 0, 1, 2)
