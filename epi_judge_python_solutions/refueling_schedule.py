@@ -6,23 +6,41 @@ from test_framework.test_failure import TestFailure
 from test_framework.test_utils import enable_executor_hook
 
 MPG = 20
+class car:
+    def __init__(self, tank, mpg):
+        self.tank = tank
+        self.mpg = mpg
+class station:
+    def __init__(self, next_leg, fuel):
+        self.next_leg = next_leg
+        self.fuel = fuel
 
-
-# gallons[i] is the amount of gas in city i, and distances[i] is the
-# distance city i to the next city.
 def find_ample_city(gallons, distances):
+    city_list = []
+    for i in range(len(gallons)):
+        my_station = station(gallons[i], distances[i])
+        city_list.append(my_station)
 
-    remaining_gallons = 0
-    CityAndRemainingGas = collections.namedtuple('CityAndRemainingGas',
-                                                 ('city', 'remaining_gallons'))
-    city_remaining_gallons_pair = CityAndRemainingGas(0, 0)
-    num_cities = len(gallons)
-    for i in range(1, num_cities):
-        remaining_gallons += gallons[i - 1] - distances[i - 1] // MPG
-        if remaining_gallons < city_remaining_gallons_pair.remaining_gallons:
-            city_remaining_gallons_pair = CityAndRemainingGas(
-                i, remaining_gallons)
-    return city_remaining_gallons_pair.city
+    for i in range(len(city_list)):
+        first = city_list.pop(0)
+        city_list.append(first) # keep the cities cycling
+        my_car = car(0, 20)
+        for stop in city_list:
+            my_car.tank += stop.fuel
+            possible_distance = (my_car.tank)*(my_car.mpg)
+            if possible_distance > stop.next_leg:
+                print("traveling")
+                difference = possible_distance - stop.next_leg
+                leftover = difference / my_car.mpg
+                my_car.tank = leftover
+                if stop == city_list[-1]:
+                    return stop.next_leg
+            else:
+                print("Station failed")
+                break
+
+
+
 
 
 @enable_executor_hook
@@ -35,7 +53,7 @@ def find_ample_city_wrapper(executor, gallons, distances):
         city = (result + i) % num_cities
         tank += gallons[city] * MPG - distances[city]
         if tank < 0:
-            raise TestFailure('Out of gas on city {}'.format(i))
+            raise TestFailure('Out of fuel on city {}'.format(i))
 
 
 if __name__ == '__main__':
