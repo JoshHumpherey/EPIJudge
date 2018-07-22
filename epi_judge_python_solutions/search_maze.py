@@ -11,31 +11,34 @@ WHITE, BLACK = range(2)
 Coordinate = collections.namedtuple('Coordinate', ('x', 'y'))
 
 
-def search_maze(maze, s, e):
+def search_maze(maze, start, end):
+    print_maze(maze)
+    print([end.row, end.col])
+    r = start.row
+    c = start.col
+    is_path = dfs(maze, r, c, end)
+    print(is_path)
+    return is_path
 
-    # Perform DFS to find a feasible path.
-    def search_maze_helper(cur):
-        # Checks cur is within maze and is a white pixel.
-        if not (0 <= cur.x < len(maze) and 0 <= cur.y < len(maze[cur.x])
-                and maze[cur.x][cur.y] == WHITE):
-            return False
-        path.append(cur)
-        maze[cur.x][cur.y] = BLACK
-        if cur == e:
-            return True
-
-        if any(
-                map(search_maze_helper,
-                    map(Coordinate, (cur.x - 1, cur.x + 1, cur.x, cur.x),
-                        (cur.y, cur.y, cur.y - 1, cur.y + 1)))):
-            return True
-        # Cannot find a path, remove the entry added in path.append(cur).
-        del path[-1]
+def dfs(maze, r, c, target):
+    if r < 0 or c < 0 or r >= len(maze) or c >= len(maze[0]) or maze[r][c] != 0:
         return False
+    elif r == target.row and c == target.col:
+        return True
+    else:
+        maze[r][c] = 1
+        p1 = dfs(maze, r+1, c, target)
+        p2 = dfs(maze, r-1, c, target)
+        p3 = dfs(maze, r, c+1, target)
+        p4 = dfs(maze, r, c-1, target)
+        return (p1 or p2 or p3 or p4)
 
-    path = []
-    search_maze_helper(s)
-    return path
+
+def print_maze(maze):
+    print("-----MAZE-----")
+    for r in range(len(maze)):
+        print(maze[r])
+    print()
 
 
 def path_element_is_feasible(maze, prev, cur):
