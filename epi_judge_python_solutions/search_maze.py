@@ -1,14 +1,14 @@
 import collections
 import copy
 import functools
-
+import time
 from test_framework import generic_test
 from test_framework.test_failure import TestFailure
 from test_framework.test_utils import enable_executor_hook
 
 WHITE, BLACK = range(2)
 
-Coordinate = collections.namedtuple('Coordinate', ('x', 'y'))
+Coordinate = collections.namedtuple('Coordinate', ('row', 'col'))
 
 
 def search_maze(maze, start, end):
@@ -27,6 +27,8 @@ def dfs(maze, r, c, target):
         return True
     else:
         maze[r][c] = 1
+        print_maze(maze)
+        time.sleep(1)
         p1 = dfs(maze, r+1, c, target)
         p2 = dfs(maze, r-1, c, target)
         p3 = dfs(maze, r, c+1, target)
