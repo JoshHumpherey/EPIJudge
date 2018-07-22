@@ -9,17 +9,21 @@ Interval = collections.namedtuple('Interval', ('left', 'right'))
 
 
 def find_minimum_visits(intervals):
+    if intervals == []:
+        return 0
+        
+    visits = 1
+    sorted_ints = sorted(intervals, key=operator.attrgetter('right'))
+    visit_time = sorted_ints[0].right
+    print("New visit time: " + str(visit_time))
+    for i in range(1, len(sorted_ints)):
+        print([sorted_ints[i].left, sorted_ints[i].right])
+        if sorted_ints[i].left > visit_time:
+            visits += 1
+            visit_time = sorted_ints[i].right
+            print("New visit time: " + str(visit_time))
+    return visits
 
-    # Sort intervals based on the right endpoints.
-    intervals.sort(key=operator.attrgetter('right'))
-    last_visit_time, num_visits = float('-inf'), 0
-    for interval in intervals:
-        if interval.left > last_visit_time:
-            # The current right endpoint, last_visit_time, will not cover any
-            # more intervals.
-            last_visit_time = interval.right
-            num_visits += 1
-    return num_visits
 
 
 @enable_executor_hook
