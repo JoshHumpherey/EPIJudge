@@ -2,16 +2,21 @@ from test_framework import generic_test
 
 
 def majority_search(stream):
-
-    candidate, candidate_count = None, 0
-    for it in stream:
-        if candidate_count == 0:
-            candidate, candidate_count = it, candidate_count + 1
-        elif candidate == it:
-            candidate_count += 1
+    the_stream = []
+    for x in stream:
+        the_stream.append(x)
+    maj_element = None
+    maj_count = 0
+    for i in range(len(the_stream)):
+        if the_stream[i] == maj_element:
+            maj_count += 1
         else:
-            candidate_count -= 1
-    return candidate
+            maj_count -= 1
+            if maj_count < 1:
+                maj_element = the_stream[i]
+                maj_count = 1
+    print(maj_element)
+    return maj_element
 
 
 def majority_search_wrapper(stream):
