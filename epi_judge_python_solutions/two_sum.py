@@ -2,17 +2,19 @@ from test_framework import generic_test
 
 
 def has_two_sum(A, t):
+    num_map = dict()
+    for x in A:
+        if x in num_map:
+            num_map[x] += 1
+        else:
+            num_map[x] = 1
 
-    i, j = 0, len(A) - 1
-
-    while i <= j:
-        if A[i] + A[j] == t:
+    for elem in A:
+        target = t - elem
+        if target in num_map:
             return True
-        elif A[i] + A[j] < t:
-            i += 1
-        else:  # A[i] + A[j] > t.
-            j -= 1
     return False
+
 
 
 if __name__ == '__main__':
