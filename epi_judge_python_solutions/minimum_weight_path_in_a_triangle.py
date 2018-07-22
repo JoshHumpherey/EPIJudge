@@ -4,7 +4,7 @@ from test_framework import generic_test
 
 
 def minimum_path_weight(triangle):
-    print_triangle(triangle)
+    #print_triangle(triangle)
     def gen_paths(triangle, sum, index, current_col):
         if index == len(triangle):
             return sum
@@ -23,6 +23,7 @@ def print_triangle(tri):
     for r in range(len(tri)):
         print(tri[r])
     print()
+
 def minimum_path_weight_pythonic(triangle):
     return min(functools.reduce(lambda result, tri: [r + min(a, b) for r, a, b in zip(tri, [float('inf')] + result, result + [float('inf')])], triangle, [0]))
 
