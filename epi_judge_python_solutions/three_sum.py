@@ -3,10 +3,11 @@ from two_sum import has_two_sum
 
 
 def has_three_sum(A, t):
-
-    A.sort()
-    # Finds if the sum of two numbers in A equals to t - a.
-    return any(has_two_sum(A, t - a) for a in A)
+    for a in A:
+        result = has_two_sum(A, t-a)
+        if result == True:
+            return True
+    return False
 
 
 if __name__ == '__main__':
