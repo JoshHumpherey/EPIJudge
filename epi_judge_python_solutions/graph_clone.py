@@ -11,26 +11,23 @@ class GraphVertex:
 
 
 def clone_graph(graph):
-
     if not graph:
         return None
 
-    q = collections.deque([graph])
+    my_queue = collections.deque([graph])
     vertex_map = {graph: GraphVertex(graph.label)}
-    while q:
-        v = q.popleft()
-        for e in v.edges:
-            # Try to copy vertex e.
-            if e not in vertex_map:
-                vertex_map[e] = GraphVertex(e.label)
-                q.append(e)
-            # Copy edge.
-            vertex_map[v].edges.append(vertex_map[e])
+    while my_queue:
+        vertex = my_queue.popleft()
+        for edge in vertex.edges:
+            if edge not in vertex_map:
+                vertex_map[edge] = GraphVertex(edge.label)
+                my_queue.append(edge)
+            vertex_map[vertex].edges.append(vertex_map[edge])
     return vertex_map[graph]
 
 
 def copy_labels(edges):
-    return [e.label for e in edges]
+    return [edge.label for edge in edges]
 
 
 def check_graph(node, graph):
@@ -38,21 +35,21 @@ def check_graph(node, graph):
         raise TestFailure('Graph was not copied')
 
     vertex_set = set()
-    q = collections.deque()
-    q.append(node)
+    my_queue = collections.deque()
+    my_queue.append(node)
     vertex_set.add(node)
-    while q:
-        vertex = q.popleft()
+    while my_queue:
+        vertex = my_queue.popleft()
         if vertex.label >= len(graph):
             raise TestFailure('Invalid vertex label')
         label1 = copy_labels(vertex.edges)
         label2 = copy_labels(graph[vertex.label].edges)
         if sorted(label1) != sorted(label2):
             raise TestFailure('Edges mismatch')
-        for e in vertex.edges:
-            if e not in vertex_set:
-                vertex_set.add(e)
-                q.append(e)
+        for edge in vertex.edges:
+            if edge not in vertex_set:
+                vertex_set.add(edge)
+                my_queue.append(edge)
 
 
 def clone_graph_test(k, edges):
