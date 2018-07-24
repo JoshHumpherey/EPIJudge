@@ -4,6 +4,7 @@ from test_framework import generic_test
 
 
 def can_form_palindrome(s):
+    print(s)
     s_list = list(s)
     is_odd = False
     c1 = collections.Counter(s_list)
