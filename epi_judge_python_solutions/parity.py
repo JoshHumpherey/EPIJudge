@@ -2,14 +2,20 @@ from test_framework import generic_test
 
 
 def parity(x):
-    one_count = 0
-    bin_num = str(bin(x))
-    for i in range(len(bin_num)):
-        if bin_num[i] == '1':
-            one_count += 1
-    if one_count % 2 == 1:
-        return True
+    numOfOneBits = 0
+    binaryRepresentation = bin(x)
+    bString = str(binaryRepresentation)
+    for i in range(2, len(binaryRepresentation)):
+        bit = bString[i]
+        if bit == '1':
+            numOfOneBits += 1
+
+    print(numOfOneBits)
+    if numOfOneBits % 2 == 0:
+        return 0
     else:
-        return False
+        return 1
+
+
 if __name__ == '__main__':
     exit(generic_test.generic_test_main("parity.py", 'parity.tsv', parity))
